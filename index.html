@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="description"
+        content="CSPOINT — The ultimate CSE resource portal for students. Latest updates, internships, exam schedules, notes, and more." />
+    <title>CSPOINT | CSE Resource Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = { theme: { extend: { colors: { navy: '#0b1a2e', navyLight: '#112240', slate: '#8892b0', lightSlate: '#a8b2d1', lightest: '#ccd6f6', accent: '#38bdf8', accentGlow: '#0ea5e9', surface: '#f8fafc', surfaceAlt: '#f1f5f9' }, fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } } }
+    </script>
+    <style>
+        * {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif
+        }
+
+        .mega-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all .25s ease
+        }
+
+        .nav-group:hover .mega-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0)
+        }
+
+        .card-hover {
+            transition: all .2s ease
+        }
+
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .12)
+        }
+
+        .badge-pulse {
+            animation: pulse-ring 2s ease infinite
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        .countdown-digit {
+            font-variant-numeric: tabular-nums
+        }
+
+        .preview-frame {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .4s ease
+        }
+
+        .preview-frame.open {
+            max-height: 300px
+        }
+
+        :focus-visible {
+            outline: 2px solid #38bdf8;
+            outline-offset: 2px;
+            border-radius: 4px
+        }
+
+        .filter-active {
+            background: #0b1a2e;
+            color: #fff
+        }
+
+        .gradient-border {
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            padding: 2px;
+            border-radius: .75rem
+        }
+
+        .gradient-border>div {
+            background: #fff;
+            border-radius: calc(.75rem - 2px)
+        }
+
+        .status-closing {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca
+        }
+
+        .status-open {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0
+        }
+
+        .status-tomorrow {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a
+        }
+
+        .status-results {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-gray-800 antialiased">
+
+    <!-- ========== HEADER ========== -->
+    <header class="bg-navy sticky top-0 z-50 shadow-lg shadow-navy/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" class="text-2xl font-extrabold tracking-tight text-white">CS<span
+                        class="text-accent">POINT</span></a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
+                    <a href="#"
+                        class="px-3 py-2 text-sm font-medium text-lightest hover:text-accent transition-colors rounded-md">News</a>
+
+                    <div class="nav-group relative">
+                        <button
+                            class="px-3 py-2 text-sm font-medium text-lightest hover:text-accent transition-colors rounded-md inline-flex items-center"
+                            aria-haspopup="true">
+                            Opportunities
+                            <svg class="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div
+                            class="mega-menu absolute left-0 mt-1 w-64 bg-white rounded-xl shadow-2xl ring-1 ring-black/5 overflow-hidden z-50">
+                            <div class="p-2">
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors group">
+                                    <span
+                                        class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">🏛️</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Government Jobs</p>
+                                        <p class="text-xs text-gray-500">UPSC, SSC, State PSC</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors group">
+                                    <span
+                                        class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-sm">💼</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Private Internships</p>
+                                        <p class="text-xs text-gray-500">Google, Microsoft, Amazon</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors group">
+                                    <span
+                                        class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm">🏆</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Coding Contests</p>
+                                        <p class="text-xs text-gray-500">Codeforces, LeetCode, HackerRank</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors group">
+                                    <span
+                                        class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm">📚</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Research Fellowships</p>
+                                        <p class="text-xs text-gray-500">MITACS, DAAD, Fulbright</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-group relative">
+                        <button
+                            class="px-3 py-2 text-sm font-medium text-lightest hover:text-accent transition-colors rounded-md inline-flex items-center"
+                            aria-haspopup="true">
+                            Resources
+                            <svg class="ml-1 w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div
+                            class="mega-menu absolute left-0 mt-1 w-64 bg-white rounded-xl shadow-2xl ring-1 ring-black/5 overflow-hidden z-50">
+                            <div class="p-2">
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors"><span
+                                        class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-sm">📝</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Lecture Notes</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors"><span
+                                        class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm">📄</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">Previous Year Papers</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surfaceAlt transition-colors"><span
+                                        class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">🎯</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-800">GATE / GRE Prep</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#"
+                        class="px-3 py-2 text-sm font-medium text-lightest hover:text-accent transition-colors rounded-md">Events</a>
+                </nav>
+
+                <!-- Search + Mobile Toggle -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:block relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input type="search" id="globalSearch" placeholder="Search posts, resources..."
+                            aria-label="Search"
+                            class="bg-navyLight text-lightest placeholder-slate rounded-full py-2 pl-10 pr-4 text-sm border border-transparent focus:border-accent focus:ring-1 focus:ring-accent w-52 focus:w-72 transition-all duration-300" />
+                    </div>
+                    <button id="mobileMenuBtn" class="lg:hidden text-lightest hover:text-accent focus:outline-none"
+                        aria-label="Toggle menu">
+                        <svg id="menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="menuClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-navyLight border-t border-white/10">
+            <div class="px-4 py-4 space-y-1">
+                <input type="search" placeholder="Search..." aria-label="Search mobile"
+                    class="md:hidden w-full bg-navy text-lightest placeholder-slate rounded-lg py-2 px-4 text-sm mb-3 border border-white/10 focus:border-accent" />
+                <a href="#"
+                    class="block px-4 py-2.5 rounded-lg text-lightest hover:bg-navy hover:text-accent transition-colors">News</a>
+                <a href="#"
+                    class="block px-4 py-2.5 rounded-lg text-lightest hover:bg-navy hover:text-accent transition-colors">Opportunities</a>
+                <a href="#"
+                    class="block px-4 py-2.5 rounded-lg text-lightest hover:bg-navy hover:text-accent transition-colors">Resources</a>
+                <a href="#"
+                    class="block px-4 py-2.5 rounded-lg text-lightest hover:bg-navy hover:text-accent transition-colors">Events</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN ========== -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Dynamic Search Bar -->
+        <section class="mb-8" aria-label="Search and filter">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row gap-3">
+                <div class="flex-1 relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search updates by title..."
+                        aria-label="Filter updates"
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <select id="filterCategory" aria-label="Filter by category"
+                    class="border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-600 focus:border-accent focus:ring-1 focus:ring-accent">
+                    <option value="all">All Categories</option>
+                    <option value="Exams">Exams</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Notice">Notice</option>
+                    <option value="Results">Results</option>
+                    <option value="Contest">Contest</option>
+                </select>
+                <input type="date" id="filterDate" aria-label="Filter by date"
+                    class="border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-600 focus:border-accent focus:ring-1 focus:ring-accent" />
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- ===== LEFT: Latest Updates ===== -->
+            <section class="lg:col-span-2" aria-label="Latest updates">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="w-1 h-6 bg-accent rounded-full"></span>Latest Updates
+                    </h2>
+                    <span class="text-xs text-gray-400">Showing <span id="visibleCount">7</span> posts</span>
+                </div>
+
+                <div class="space-y-3" id="updatesList"></div>
+                <p id="noResults" class="hidden text-center text-gray-400 py-8">No updates match your search criteria.
+                </p>
+            </section>
+
+            <!-- ===== RIGHT: Noticeboard ===== -->
+            <aside class="lg:col-span-1" aria-label="Active deadlines">
+                <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden sticky top-24">
+                    <div class="bg-gradient-to-r from-navy to-navyLight px-5 py-4 flex justify-between items-center">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Active Deadlines
+                        </h3>
+                        <span class="badge-pulse w-2.5 h-2.5 bg-accent rounded-full"></span>
+                    </div>
+
+                    <div class="divide-y divide-gray-50" id="deadlinesList"></div>
+
+                    <div class="p-3 bg-surfaceAlt text-center border-t border-gray-100">
+                        <a href="#" class="text-sm text-navy font-semibold hover:text-accent transition-colors">View All
+                            Deadlines →</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- ===== RESOURCE LIBRARY ===== -->
+        <section class="mt-14" aria-label="Resource library">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-accent rounded-full"></span>Resource Library
+                </h2>
+                <a href="#" class="text-sm font-semibold text-navy hover:text-accent transition-colors">Browse All →</a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="resourcesList"></div>
+        </section>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-navy text-slate mt-16 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <a href="#" class="text-2xl font-extrabold text-white mb-3 block">CS<span
+                        class="text-accent">POINT</span></a>
+                <p class="text-sm leading-relaxed">The ultimate resource portal for Computer Science students. Stay
+                    updated. Stay ahead.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-accent transition-colors">About Us</a></li>
+                    <li><a href="#" class="hover:text-accent transition-colors">Contact</a></li>
+                    <li><a href="#" class="hover:text-accent transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-accent transition-colors">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Resources</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-accent transition-colors">Semester Notes</a></li>
+                    <li><a href="#" class="hover:text-accent transition-colors">Placement Guide</a></li>
+                    <li><a href="#" class="hover:text-accent transition-colors">Research Opportunities</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Newsletter</h4>
+                <p class="text-xs mb-3 leading-relaxed">Get the latest internships and exam updates delivered to your
+                    inbox.</p>
+                <form id="newsletterForm" class="space-y-2"
+                    onsubmit="event.preventDefault();document.getElementById('nlSuccess').classList.remove('hidden')">
+                    <!-- CSRF Token (placeholder) -->
+                    <input type="hidden" name="_csrf" value="tok_abc123xyz" />
+                    <input type="email" placeholder="you@example.com" required aria-label="Email for newsletter"
+                        class="w-full bg-navyLight border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate focus:border-accent focus:ring-1 focus:ring-accent" />
+                    <!-- Honeypot -->
+                    <div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" name="website_url"
+                            tabindex="-1" autocomplete="off" /></div>
+                    <button type="submit"
+                        class="w-full bg-accent text-navy font-bold py-2.5 rounded-lg text-sm hover:bg-accent/90 transition-all active:scale-[0.98]">Subscribe</button>
+                    <p id="nlSuccess" class="hidden text-xs text-accent mt-1">✓ Subscribed successfully!</p>
+                </form>
+            </div>
+        </div>
+        <div class="border-t border-white/5 py-6 text-center text-xs text-slate/60">
+            &copy; 2026 CSPOINT. All rights reserved. Built with semantic HTML5, Tailwind CSS & Vanilla JS.
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        // ===== SHARED DATA (reads from same localStorage as admin.html) =====
+        const DEFAULT_DATA = {
+            updates: [
+                { id: 1, title: 'End Semester Examination Schedule Released \u2014 Spring 2026', desc: 'Final schedule for the CSE department end-term exams has been published. Exams commence from May 15th, 2026.', cat: 'Exams', date: '2026-02-18' },
+                { id: 2, title: 'Summer Research Internship at IIT Bombay \u2014 Applications Open', desc: 'Applications are invited for the Summer Research Fellowship Program 2026. Eligible for 3rd-year B.Tech students.', cat: 'Internship', date: '2026-02-17' },
+                { id: 3, title: '3-Day Workshop on Generative AI & Large Language Models', desc: 'Hands-on workshop covering Transformers, PyTorch, and deploying LLMs. Registration closes Feb 25.', cat: 'Workshop', date: '2026-02-16' },
+                { id: 4, title: 'GATE 2026 Results Declared \u2014 Check Scorecard Now', desc: 'IIT Delhi has released the GATE 2026 results. Candidates can download their scorecard from the official portal.', cat: 'Results', date: '2026-02-15' },
+                { id: 5, title: 'Holiday Notice: University Closed for Maha Shivaratri', desc: 'All departments will remain closed on Feb 26 on account of Maha Shivaratri. Classes resume Feb 27.', cat: 'Notice', date: '2026-02-14' },
+                { id: 6, title: 'Google Code Jam 2026 \u2014 Qualification Round Registration Open', desc: 'Register for the qualification round. Open to all participants globally. Top scorers proceed to Round 1.', cat: 'Contest', date: '2026-02-13' },
+                { id: 7, title: 'Microsoft Engage 2026 \u2014 Mentorship Program Applications', desc: 'Microsoft India flagship mentorship and internship program for pre-final year students. Apply by March 10.', cat: 'Internship', date: '2026-02-12' }
+            ],
+            deadlines: [
+                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon' },
+                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open' },
+                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow' },
+                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open' },
+                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out' }
+            ],
+            resources: [
+                { id: 1, name: 'Data Structures Notes', type: 'PDF', size: '2.4 MB' },
+                { id: 2, name: 'OS \u2014 Galvin 9th Ed', type: 'eBook', size: '15 MB' },
+                { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
+                { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
+            ]
+        };
+
+        const data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+        // Seed localStorage if empty so admin picks it up too
+        if (!localStorage.getItem('cspoint_data')) {
+            localStorage.setItem('cspoint_data', JSON.stringify(data));
+            localStorage.setItem('cspoint_nextId', JSON.stringify({ updates: 8, deadlines: 6, resources: 5 }));
+        }
+
+        // ===== CATEGORY STYLES =====
+        const catStyles = {
+            Exams: 'bg-blue-50 text-blue-700 border-blue-100',
+            Internship: 'bg-green-50 text-green-700 border-green-100',
+            Workshop: 'bg-purple-50 text-purple-700 border-purple-100',
+            Results: 'bg-amber-50 text-amber-700 border-amber-100',
+            Notice: 'bg-gray-100 text-gray-700 border-gray-200',
+            Contest: 'bg-rose-50 text-rose-700 border-rose-100'
+        };
+        const statusStyleMap = {
+            'Closing Soon': { cls: 'status-closing', color: 'text-red-600' },
+            'Open': { cls: 'status-open', color: 'text-green-600' },
+            'Tomorrow': { cls: 'status-tomorrow', color: 'text-amber-600' },
+            'Results Out': { cls: 'status-results', color: 'text-blue-600' }
+        };
+        const typeIcons = {
+            PDF: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+            eBook: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
+            ZIP: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>',
+            Video: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>'
+        };
+        const typeColors = { PDF: 'bg-blue-50 text-blue-600', eBook: 'bg-green-50 text-green-600', ZIP: 'bg-purple-50 text-purple-600', Video: 'bg-rose-50 text-rose-600' };
+
+        // ===== RENDER UPDATES =====
+        function renderUpdates() {
+            const container = document.getElementById('updatesList');
+            function getRelativeDate(dateStr) {
+                const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 864e5);
+                if (diff === 0) return 'Today';
+                if (diff === 1) return 'Yesterday';
+                return diff + ' days ago';
+            }
+            container.innerHTML = data.updates.map(u => {
+                const style = catStyles[u.cat] || 'bg-gray-100 text-gray-700 border-gray-200';
+                const readTime = Math.max(1, Math.ceil((u.desc || '').split(' ').length / 50));
+                return `<article class="update-card bg-white rounded-xl border border-gray-100 p-4 card-hover flex gap-4" data-category="${u.cat}" data-date="${u.date}">
+                    <div class="flex-shrink-0 mt-1"><span class="inline-block px-2.5 py-1 rounded-md text-xs font-bold ${style} border">${u.cat}</span></div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-gray-900 leading-snug mb-1"><a href="#" class="hover:text-accentGlow transition-colors">${u.title}</a></h3>
+                        <p class="text-sm text-gray-500 line-clamp-2">${u.desc || ''}</p>
+                        <div class="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                            <span>\u23f1 ${readTime} min read</span><span>Updated: ${getRelativeDate(u.date)}</span>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
+            document.getElementById('visibleCount').textContent = data.updates.length;
+        }
+
+        // ===== RENDER DEADLINES =====
+        function renderDeadlines() {
+            const container = document.getElementById('deadlinesList');
+            container.innerHTML = data.deadlines.map(d => {
+                const ss = statusStyleMap[d.status] || statusStyleMap['Open'];
+                const isResult = d.status === 'Results Out';
+                return `<div class="p-4 hover:bg-surfaceAlt transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-sm font-semibold text-gray-800">${d.name}</span>
+                        <span class="${ss.cls} text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">${d.status}</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>${isResult ? 'Published:' : 'Ends in:'}</span>
+                        ${isResult
+                        ? `<span class="text-xs font-medium text-blue-600">${new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>`
+                        : `<span class="countdown-digit font-mono font-bold ${ss.color}" data-countdown="${d.date}"></span>`
+                    }
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ===== RENDER RESOURCES =====
+        function renderResources() {
+            const container = document.getElementById('resourcesList');
+            container.innerHTML = data.resources.map(r => {
+                const icon = typeIcons[r.type] || typeIcons['PDF'];
+                const color = typeColors[r.type] || typeColors['PDF'];
+                return `<div class="gradient-border card-hover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="w-10 h-10 rounded-lg ${color} flex items-center justify-center">${icon}</div>
+                            <button onclick="this.closest('.gradient-border').querySelector('.preview-frame').classList.toggle('open')" class="text-xs text-accent font-semibold hover:underline" aria-label="Toggle preview">Preview</button>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-sm mb-1">${r.name}</h4>
+                        <p class="text-xs text-gray-400 mb-3">${r.type} \u2022 ${r.size || 'N/A'}</p>
+                        <div class="preview-frame mb-3 rounded-lg bg-surfaceAlt p-3">
+                            <p class="text-xs text-gray-500 italic">Preview content for ${r.name}</p>
+                        </div>
+                        <button class="w-full py-2 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>Download
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ===== INIT =====
+        renderUpdates();
+        renderDeadlines();
+        renderResources();
+
+        // ===== Mobile Menu =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOpen = document.getElementById('menuOpen');
+        const menuClose = document.getElementById('menuClose');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuOpen.classList.toggle('hidden');
+            menuClose.classList.toggle('hidden');
+        });
+
+        // ===== Countdown Timers =====
+        function updateCountdowns() {
+            document.querySelectorAll('[data-countdown]').forEach(el => {
+                const target = new Date(el.dataset.countdown).getTime();
+                const now = Date.now();
+                const d = target - now;
+                if (d < 0) { el.textContent = 'EXPIRED'; el.className = 'text-xs font-medium text-gray-400'; return; }
+                const days = Math.floor(d / 864e5);
+                const hrs = Math.floor((d % 864e5) / 36e5);
+                const mins = Math.floor((d % 36e5) / 6e4);
+                const secs = Math.floor((d % 6e4) / 1e3);
+                el.textContent = `${String(days).padStart(2, '0')}d ${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+            });
+        }
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000);
+
+        // ===== Dynamic Search & Filter =====
+        const searchInput = document.getElementById('searchInput');
+        const filterCat = document.getElementById('filterCategory');
+        const filterDate = document.getElementById('filterDate');
+        const noResults = document.getElementById('noResults');
+        const visibleCount = document.getElementById('visibleCount');
+
+        function applyFilters() {
+            const term = searchInput.value.toLowerCase().trim();
+            const cat = filterCat.value;
+            const dateVal = filterDate.value;
+            let count = 0;
+            document.querySelectorAll('.update-card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const cardCat = card.dataset.category;
+                const cardDate = card.dataset.date;
+                const matchTerm = !term || title.includes(term);
+                const matchCat = cat === 'all' || cardCat === cat;
+                const matchDate = !dateVal || cardDate === dateVal;
+                const show = matchTerm && matchCat && matchDate;
+                card.style.display = show ? '' : 'none';
+                if (show) count++;
+            });
+            visibleCount.textContent = count;
+            noResults.classList.toggle('hidden', count > 0);
+        }
+        searchInput.addEventListener('input', applyFilters);
+        filterCat.addEventListener('change', applyFilters);
+        filterDate.addEventListener('change', applyFilters);
+    </script>
+</body>
+
+</html>

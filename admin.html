@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Admin Portal | CSPOINT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = { theme: { extend: { colors: { navy: '#0b1a2e', navyLight: '#112240', slate: '#8892b0', accent: '#38bdf8', surface: '#f8fafc', surfaceAlt: '#f1f5f9' }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif
+        }
+
+        .sidebar-link.active {
+            background: rgba(56, 189, 248, .1);
+            color: #38bdf8;
+            border-right: 3px solid #38bdf8
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, .5);
+            backdrop-filter: blur(4px)
+        }
+
+        .toast {
+            animation: slideIn .3s ease, fadeOut .3s ease 2.7s forwards
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid #38bdf8;
+            outline-offset: 2px;
+            border-radius: 4px
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginView" class="min-h-screen flex items-center justify-center bg-navy">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-extrabold text-navy">CS<span class="text-accent">POINT</span></h1>
+                <p class="text-sm text-gray-400 mt-1">Admin Portal</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" value="admin"
+                        class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="loginPass" placeholder="Enter 'admin'"
+                        class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <p id="loginError" class="hidden text-xs text-red-500">Invalid password. Try "admin".</p>
+                <button type="submit"
+                    class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors">Sign
+                    In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashView" class="hidden min-h-screen flex">
+
+        <!-- Sidebar -->
+        <aside class="w-60 bg-navy text-white flex-shrink-0 flex flex-col hidden md:flex">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-xl font-extrabold">CS<span class="text-accent">POINT</span></h1>
+                <p class="text-[10px] text-slate mt-0.5 uppercase tracking-widest">Admin Console</p>
+            </div>
+            <nav class="flex-1 py-4 space-y-1 px-3">
+                <button onclick="switchTab('dashboard')"
+                    class="sidebar-link active w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                    data-tab="dashboard">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Dashboard
+                </button>
+                <button onclick="switchTab('updates')"
+                    class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                    data-tab="updates">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                    Updates
+                </button>
+                <button onclick="switchTab('deadlines')"
+                    class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                    data-tab="deadlines">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Deadlines
+                </button>
+                <button onclick="switchTab('resources')"
+                    class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                    data-tab="resources">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Resources
+                </button>
+            </nav>
+            <div class="p-3 border-t border-white/10">
+                <button onclick="logout()"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-300 hover:bg-red-900/30 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="bg-white border-b border-gray-100 px-6 py-3 flex justify-between items-center flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <button class="md:hidden text-gray-600"
+                        onclick="document.querySelector('aside').classList.toggle('hidden')">☰</button>
+                    <h2 id="pageTitle" class="text-lg font-bold text-gray-800">Dashboard</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-400">Welcome, Admin</span>
+                    <div
+                        class="w-8 h-8 rounded-full bg-navy text-white flex items-center justify-center text-xs font-bold">
+                        A</div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="flex-1 overflow-y-auto p-6 bg-surface">
+
+                <!-- TAB: Dashboard Overview -->
+                <div id="tab-dashboard" class="tab-content space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white rounded-xl border border-gray-100 p-5">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Updates</p>
+                            <p class="text-3xl font-bold text-navy" id="statUpdates">2</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-100 p-5">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Active Deadlines</p>
+                            <p class="text-3xl font-bold text-accent" id="statDeadlines">1</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-100 p-5">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Resources</p>
+                            <p class="text-3xl font-bold text-green-600" id="statResources">1</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-100 p-5">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Subscribers</p>
+                            <p class="text-3xl font-bold text-purple-600">128</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 p-6">
+                        <h3 class="font-bold text-gray-800 mb-3">Quick Actions</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="switchTab('updates');openModal('update')"
+                                class="bg-navy text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-navyLight transition-colors">+
+                                New Update</button>
+                            <button onclick="switchTab('deadlines');openModal('deadline')"
+                                class="bg-accent text-navy px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent/80 transition-colors">+
+                                New Deadline</button>
+                            <button onclick="switchTab('resources');openModal('resource')"
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">+
+                                New Resource</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: Updates -->
+                <div id="tab-updates" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold">Manage Updates</h3>
+                        <button onclick="openModal('update')"
+                            class="bg-navy text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">+
+                            Add Update</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead class="bg-surfaceAlt text-xs text-gray-500 uppercase">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Title</th>
+                                    <th class="px-4 py-3 text-left">Category</th>
+                                    <th class="px-4 py-3 text-left">Date</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="updatesBody" class="divide-y divide-gray-50"></tbody>
+                        </table>
+                        <p id="emptyUpdates" class="hidden text-center text-gray-400 py-8 text-sm">No updates yet. Click
+                            "+ Add Update" to create one.</p>
+                    </div>
+                </div>
+
+                <!-- TAB: Deadlines -->
+                <div id="tab-deadlines" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold">Manage Deadlines</h3>
+                        <button onclick="openModal('deadline')"
+                            class="bg-navy text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">+
+                            Add Deadline</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead class="bg-surfaceAlt text-xs text-gray-500 uppercase">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Event</th>
+                                    <th class="px-4 py-3 text-left">Deadline</th>
+                                    <th class="px-4 py-3 text-left">Status</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deadlinesBody" class="divide-y divide-gray-50"></tbody>
+                        </table>
+                        <p id="emptyDeadlines" class="hidden text-center text-gray-400 py-8 text-sm">No deadlines yet.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TAB: Resources -->
+                <div id="tab-resources" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold">Manage Resources</h3>
+                        <button onclick="openModal('resource')"
+                            class="bg-navy text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">+
+                            Add Resource</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead class="bg-surfaceAlt text-xs text-gray-500 uppercase">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Name</th>
+                                    <th class="px-4 py-3 text-left">Type</th>
+                                    <th class="px-4 py-3 text-left">Size</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resourcesBody" class="divide-y divide-gray-50"></tbody>
+                        </table>
+                        <p id="emptyResources" class="hidden text-center text-gray-400 py-8 text-sm">No resources yet.
+                        </p>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: Add/Edit Update ===== -->
+    <div id="modal-update" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold" id="modalUpdateTitle">Add New Update</h3>
+                <button onclick="closeModal('update')"
+                    class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form id="updateForm" class="space-y-4">
+                <input type="hidden" id="updateEditId" value="" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                    <input type="text" id="uTitle" required
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="uDesc" rows="3"
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                        <select id="uCat" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent">
+                            <option value="Exams">Exams</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Notice">Notice</option>
+                            <option value="Results">Results</option>
+                            <option value="Contest">Contest</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date *</label>
+                        <input type="date" id="uDate" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('update')"
+                        class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 py-2.5 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: Add/Edit Deadline ===== -->
+    <div id="modal-deadline" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold" id="modalDeadlineTitle">Add New Deadline</h3>
+                <button onclick="closeModal('deadline')"
+                    class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form id="deadlineForm" class="space-y-4">
+                <input type="hidden" id="deadlineEditId" value="" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Event Name *</label>
+                    <input type="text" id="dName" required
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deadline Date *</label>
+                        <input type="datetime-local" id="dDate" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
+                        <select id="dStatus" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent">
+                            <option value="Open">Open</option>
+                            <option value="Closing Soon">Closing Soon</option>
+                            <option value="Tomorrow">Tomorrow</option>
+                            <option value="Results Out">Results Out</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('deadline')"
+                        class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 py-2.5 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: Add/Edit Resource ===== -->
+    <div id="modal-resource" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold" id="modalResourceTitle">Add New Resource</h3>
+                <button onclick="closeModal('resource')"
+                    class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form id="resourceForm" class="space-y-4">
+                <input type="hidden" id="resourceEditId" value="" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Resource Name *</label>
+                    <input type="text" id="rName" required
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">File Type *</label>
+                        <select id="rType" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent">
+                            <option value="PDF">PDF</option>
+                            <option value="eBook">eBook</option>
+                            <option value="ZIP">ZIP</option>
+                            <option value="Video">Video</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">File Size</label>
+                        <input type="text" id="rSize" placeholder="e.g. 2.4 MB"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('resource')"
+                        class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 py-2.5 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"
+        class="hidden fixed top-4 right-4 z-[100] bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
+    </div>
+
+    <script>
+        // ===== DATA STORE (with localStorage persistence) =====
+        const DEFAULT_DATA = {
+            updates: [
+                { id: 1, title: 'End Semester Examination Schedule Released \u2014 Spring 2026', desc: 'Final schedule for the CSE department end-term exams has been published. Exams commence from May 15th, 2026.', cat: 'Exams', date: '2026-02-18' },
+                { id: 2, title: 'Summer Research Internship at IIT Bombay \u2014 Applications Open', desc: 'Applications are invited for the Summer Research Fellowship Program 2026. Eligible for 3rd-year B.Tech students.', cat: 'Internship', date: '2026-02-17' },
+                { id: 3, title: '3-Day Workshop on Generative AI & Large Language Models', desc: 'Hands-on workshop covering Transformers, PyTorch, and deploying LLMs. Registration closes Feb 25.', cat: 'Workshop', date: '2026-02-16' },
+                { id: 4, title: 'GATE 2026 Results Declared \u2014 Check Scorecard Now', desc: 'IIT Delhi has released the GATE 2026 results. Candidates can download their scorecard from the official portal.', cat: 'Results', date: '2026-02-15' },
+                { id: 5, title: 'Holiday Notice: University Closed for Maha Shivaratri', desc: 'All departments will remain closed on Feb 26 on account of Maha Shivaratri. Classes resume Feb 27.', cat: 'Notice', date: '2026-02-14' },
+                { id: 6, title: 'Google Code Jam 2026 \u2014 Qualification Round Registration Open', desc: 'Register for the qualification round. Open to all participants globally. Top scorers proceed to Round 1.', cat: 'Contest', date: '2026-02-13' },
+                { id: 7, title: 'Microsoft Engage 2026 \u2014 Mentorship Program Applications', desc: 'Microsoft India flagship mentorship and internship program for pre-final year students. Apply by March 10.', cat: 'Internship', date: '2026-02-12' }
+            ],
+            deadlines: [
+                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon' },
+                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open' },
+                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow' },
+                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open' },
+                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out' }
+            ],
+            resources: [
+                { id: 1, name: 'Data Structures Notes', type: 'PDF', size: '2.4 MB' },
+                { id: 2, name: 'OS \u2014 Galvin 9th Ed', type: 'eBook', size: '15 MB' },
+                { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
+                { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
+            ]
+        };
+
+        // Load from localStorage or use defaults
+        let data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+        let nextId = JSON.parse(localStorage.getItem('cspoint_nextId')) || { updates: 8, deadlines: 6, resources: 5 };
+
+        function saveData() {
+            localStorage.setItem('cspoint_data', JSON.stringify(data));
+            localStorage.setItem('cspoint_nextId', JSON.stringify(nextId));
+        }
+
+        // ===== LOGIN =====
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            if (document.getElementById('loginPass').value === 'admin') {
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('dashView').classList.remove('hidden');
+                renderAll();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+        function logout() {
+            document.getElementById('dashView').classList.add('hidden');
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('loginPass').value = '';
+        }
+
+        // ===== TABS =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => { l.classList.remove('active'); if (l.dataset.tab === tab) l.classList.add('active') });
+            const titles = { dashboard: 'Dashboard', updates: 'Manage Updates', deadlines: 'Manage Deadlines', resources: 'Manage Resources' };
+            document.getElementById('pageTitle').textContent = titles[tab] || 'Dashboard';
+        }
+
+        // ===== MODALS =====
+        function openModal(type) { document.getElementById('modal-' + type).classList.remove('hidden') }
+        function closeModal(type) {
+            document.getElementById('modal-' + type).classList.add('hidden');
+            document.getElementById(type + 'Form').reset();
+            document.getElementById(type === 'update' ? 'updateEditId' : type === 'deadline' ? 'deadlineEditId' : 'resourceEditId').value = '';
+            const mTitle = type === 'update' ? 'modalUpdateTitle' : type === 'deadline' ? 'modalDeadlineTitle' : 'modalResourceTitle';
+            document.getElementById(mTitle).textContent = 'Add New ' + type.charAt(0).toUpperCase() + type.slice(1);
+        }
+        function showToast(msg) {
+            const t = document.getElementById('toast'); t.textContent = msg; t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+
+        // ===== CATEGORY COLORS =====
+        const catColors = { Exams: 'bg-blue-50 text-blue-700', Internship: 'bg-green-50 text-green-700', Workshop: 'bg-purple-50 text-purple-700', Notice: 'bg-gray-100 text-gray-700', Results: 'bg-amber-50 text-amber-700', Contest: 'bg-rose-50 text-rose-700' };
+        const statusColors = { 'Open': 'bg-green-50 text-green-700', 'Closing Soon': 'bg-red-50 text-red-700', 'Tomorrow': 'bg-amber-50 text-amber-700', 'Results Out': 'bg-blue-50 text-blue-700' };
+
+        // ===== RENDER =====
+        function renderAll() { renderUpdates(); renderDeadlines(); renderResources(); updateStats(); }
+
+        function renderUpdates() {
+            const tb = document.getElementById('updatesBody');
+            const empty = document.getElementById('emptyUpdates');
+            if (!data.updates.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            tb.innerHTML = data.updates.map(u => `<tr>
+        <td class="px-4 py-3 font-medium">${u.title}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${catColors[u.cat] || ''}">${u.cat}</span></td>
+        <td class="px-4 py-3 text-gray-500">${u.date}</td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <button onclick="editUpdate(${u.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
+          <button onclick="deleteItem('updates',${u.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
+        </td></tr>`).join('');
+        }
+
+        function renderDeadlines() {
+            const tb = document.getElementById('deadlinesBody');
+            const empty = document.getElementById('emptyDeadlines');
+            if (!data.deadlines.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            tb.innerHTML = data.deadlines.map(d => `<tr>
+        <td class="px-4 py-3 font-medium">${d.name}</td>
+        <td class="px-4 py-3 text-gray-500">${d.date.replace('T', ' ')}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${statusColors[d.status] || ''}">${d.status}</span></td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <button onclick="editDeadline(${d.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
+          <button onclick="deleteItem('deadlines',${d.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
+        </td></tr>`).join('');
+        }
+
+        function renderResources() {
+            const tb = document.getElementById('resourcesBody');
+            const empty = document.getElementById('emptyResources');
+            if (!data.resources.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            tb.innerHTML = data.resources.map(r => `<tr>
+        <td class="px-4 py-3 font-medium">${r.name}</td>
+        <td class="px-4 py-3 text-gray-500">${r.type}</td>
+        <td class="px-4 py-3 text-gray-500">${r.size || '—'}</td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <button onclick="editResource(${r.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
+          <button onclick="deleteItem('resources',${r.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
+        </td></tr>`).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('statUpdates').textContent = data.updates.length;
+            document.getElementById('statDeadlines').textContent = data.deadlines.length;
+            document.getElementById('statResources').textContent = data.resources.length;
+        }
+
+        // ===== CRUD: UPDATES =====
+        document.getElementById('updateForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const editId = document.getElementById('updateEditId').value;
+            const item = { title: document.getElementById('uTitle').value, desc: document.getElementById('uDesc').value, cat: document.getElementById('uCat').value, date: document.getElementById('uDate').value };
+            if (editId) { const idx = data.updates.findIndex(u => u.id == editId); if (idx > -1) data.updates[idx] = { ...data.updates[idx], ...item }; showToast('Update edited successfully!'); }
+            else { item.id = nextId.updates++; data.updates.unshift(item); showToast('Update added successfully!'); }
+            saveData(); closeModal('update'); renderAll();
+        });
+        function editUpdate(id) {
+            const u = data.updates.find(x => x.id === id); if (!u) return;
+            document.getElementById('updateEditId').value = id;
+            document.getElementById('uTitle').value = u.title;
+            document.getElementById('uDesc').value = u.desc || '';
+            document.getElementById('uCat').value = u.cat;
+            document.getElementById('uDate').value = u.date;
+            document.getElementById('modalUpdateTitle').textContent = 'Edit Update';
+            openModal('update');
+        }
+
+        // ===== CRUD: DEADLINES =====
+        document.getElementById('deadlineForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const editId = document.getElementById('deadlineEditId').value;
+            const item = { name: document.getElementById('dName').value, date: document.getElementById('dDate').value, status: document.getElementById('dStatus').value };
+            if (editId) { const idx = data.deadlines.findIndex(d => d.id == editId); if (idx > -1) data.deadlines[idx] = { ...data.deadlines[idx], ...item }; showToast('Deadline edited!'); }
+            else { item.id = nextId.deadlines++; data.deadlines.unshift(item); showToast('Deadline added!'); }
+            saveData(); closeModal('deadline'); renderAll();
+        });
+        function editDeadline(id) {
+            const d = data.deadlines.find(x => x.id === id); if (!d) return;
+            document.getElementById('deadlineEditId').value = id;
+            document.getElementById('dName').value = d.name;
+            document.getElementById('dDate').value = d.date;
+            document.getElementById('dStatus').value = d.status;
+            document.getElementById('modalDeadlineTitle').textContent = 'Edit Deadline';
+            openModal('deadline');
+        }
+
+        // ===== CRUD: RESOURCES =====
+        document.getElementById('resourceForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const editId = document.getElementById('resourceEditId').value;
+            const item = { name: document.getElementById('rName').value, type: document.getElementById('rType').value, size: document.getElementById('rSize').value };
+            if (editId) { const idx = data.resources.findIndex(r => r.id == editId); if (idx > -1) data.resources[idx] = { ...data.resources[idx], ...item }; showToast('Resource edited!'); }
+            else { item.id = nextId.resources++; data.resources.unshift(item); showToast('Resource added!'); }
+            saveData(); closeModal('resource'); renderAll();
+        });
+        function editResource(id) {
+            const r = data.resources.find(x => x.id === id); if (!r) return;
+            document.getElementById('resourceEditId').value = id;
+            document.getElementById('rName').value = r.name;
+            document.getElementById('rType').value = r.type;
+            document.getElementById('rSize').value = r.size || '';
+            document.getElementById('modalResourceTitle').textContent = 'Edit Resource';
+            openModal('resource');
+        }
+
+        // ===== DELETE =====
+        function deleteItem(type, id) {
+            if (!confirm('Are you sure you want to delete this item?')) return;
+            data[type] = data[type].filter(x => x.id !== id);
+            saveData();
+            showToast('Item deleted.');
+            renderAll();
+        }
+    </script>
+</body>
+
+</html>
