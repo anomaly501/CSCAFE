@@ -368,6 +368,16 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="resourcesList"></div>
         </section>
+
+        <!-- ===== QUICK LINKS ===== -->
+        <section class="mt-14" aria-label="Quick Links">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-accent rounded-full"></span>Quick Links
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="linksList"></div>
+        </section>
     </main>
 
     <!-- ========== FOOTER ========== -->
@@ -445,14 +455,20 @@
                 { id: 2, name: 'OS \u2014 Galvin 9th Ed', type: 'eBook', size: '15 MB' },
                 { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
                 { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
+            ],
+            links: [
+                { id: 1, label: 'University Portal', url: 'https://university.edu', cat: 'Official', desc: 'Main university website' },
+                { id: 2, label: 'CSE Department', url: 'https://cse.university.edu', cat: 'Academic', desc: 'Department homepage' },
+                { id: 3, label: 'Placement Cell', url: 'https://placement.university.edu', cat: 'Career', desc: 'Training & placements' }
             ]
         };
 
         const data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+        if (!data.links) data.links = JSON.parse(JSON.stringify(DEFAULT_DATA.links));
         // Seed localStorage if empty so admin picks it up too
         if (!localStorage.getItem('cspoint_data')) {
             localStorage.setItem('cspoint_data', JSON.stringify(data));
-            localStorage.setItem('cspoint_nextId', JSON.stringify({ updates: 8, deadlines: 6, resources: 5 }));
+            localStorage.setItem('cspoint_nextId', JSON.stringify({ updates: 8, deadlines: 6, resources: 5, links: 4 }));
         }
 
         // ===== CATEGORY STYLES =====
@@ -551,10 +567,41 @@
             }).join('');
         }
 
+        // ===== RENDER LINKS =====
+        const linkCatColors = { Official: 'bg-blue-50 text-blue-700 border-blue-100', Academic: 'bg-green-50 text-green-700 border-green-100', Social: 'bg-pink-50 text-pink-700 border-pink-100', Tool: 'bg-purple-50 text-purple-700 border-purple-100', Career: 'bg-amber-50 text-amber-700 border-amber-100', Other: 'bg-gray-100 text-gray-700 border-gray-200' };
+        const linkCatIcons = {
+            Official: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+            Academic: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
+            Social: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+            Tool: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+            Career: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+            Other: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>'
+        };
+        function renderLinks() {
+            const container = document.getElementById('linksList');
+            if (!data.links || !data.links.length) { container.innerHTML = '<p class="text-gray-400 text-sm col-span-full text-center py-6">No quick links available.</p>'; return; }
+            container.innerHTML = data.links.map(l => {
+                const style = linkCatColors[l.cat] || linkCatColors['Other'];
+                const icon = linkCatIcons[l.cat] || linkCatIcons['Other'];
+                return `<a href="${l.url}" target="_blank" rel="noopener" class="group block bg-white rounded-xl border border-gray-100 p-4 card-hover">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg ${style.split(' ').slice(0, 2).join(' ')} flex items-center justify-center flex-shrink-0">${icon}</div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-900 text-sm group-hover:text-accent transition-colors">${l.label}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5 truncate">${l.desc || l.url}</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${style} border">${l.cat}</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </div>
+                </a>`;
+            }).join('');
+        }
+
         // ===== INIT =====
         renderUpdates();
         renderDeadlines();
         renderResources();
+        renderLinks();
 
         // ===== Mobile Menu =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');

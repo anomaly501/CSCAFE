@@ -85,7 +85,62 @@
                 <button type="submit"
                     class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors">Sign
                     In</button>
+                <div class="text-center mt-3">
+                    <button type="button" onclick="document.getElementById('forgotModal').classList.remove('hidden')"
+                        class="text-xs text-accent hover:underline font-medium">Forgot Password?</button>
+                </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ===== FORGOT PASSWORD MODAL ===== -->
+    <div id="forgotModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-navy">Reset Password</h3>
+                <button onclick="document.getElementById('forgotModal').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <div id="forgotStep1">
+                <p class="text-sm text-gray-500 mb-4">Enter your admin email to receive a reset code.</p>
+                <input type="email" id="forgotEmail" placeholder="admin@cspoint.edu"
+                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
+                <button onclick="handleForgotStep1()"
+                    class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Send
+                    Reset Code</button>
+            </div>
+            <div id="forgotStep2" class="hidden">
+                <p class="text-sm text-gray-500 mb-2">Enter the 4-digit code sent to your email.</p>
+                <p class="text-xs text-accent mb-3 font-medium">Hint: demo code is <strong>1234</strong></p>
+                <input type="text" id="forgotCode" placeholder="Enter 4-digit code" maxlength="4"
+                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-center tracking-[0.5em] font-mono font-bold focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
+                <button onclick="handleForgotStep2()"
+                    class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Verify
+                    Code</button>
+            </div>
+            <div id="forgotStep3" class="hidden">
+                <p class="text-sm text-gray-500 mb-4">Create your new password.</p>
+                <input type="password" id="newPass" placeholder="New password"
+                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
+                <input type="password" id="confirmPass" placeholder="Confirm password"
+                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
+                <p id="forgotPassError" class="hidden text-xs text-red-500 mb-2"></p>
+                <button onclick="handleForgotStep3()"
+                    class="w-full bg-green-600 text-white font-semibold py-2.5 rounded-lg hover:bg-green-700 transition-colors text-sm">Reset
+                    Password</button>
+            </div>
+            <div id="forgotSuccess" class="hidden text-center">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-50 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <p class="text-sm font-semibold text-gray-800">Password Reset Successfully!</p>
+                <p class="text-xs text-gray-400 mt-1">You can now login with your new password.</p>
+                <button onclick="closeForgotModal()"
+                    class="mt-4 w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Back
+                    to Login</button>
+            </div>
         </div>
     </div>
 
@@ -134,6 +189,15 @@
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Resources
+                </button>
+                <button onclick="switchTab('links')"
+                    class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                    data-tab="links">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    Links
                 </button>
             </nav>
             <div class="p-3 border-t border-white/10">
@@ -184,8 +248,8 @@
                             <p class="text-3xl font-bold text-green-600" id="statResources">1</p>
                         </div>
                         <div class="bg-white rounded-xl border border-gray-100 p-5">
-                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Subscribers</p>
-                            <p class="text-3xl font-bold text-purple-600">128</p>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Quick Links</p>
+                            <p class="text-3xl font-bold text-purple-600" id="statLinks">0</p>
                         </div>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-100 p-6">
@@ -200,6 +264,9 @@
                             <button onclick="switchTab('resources');openModal('resource')"
                                 class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">+
                                 New Resource</button>
+                            <button onclick="switchTab('links');openModal('link')"
+                                class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">+
+                                New Link</button>
                         </div>
                     </div>
                 </div>
@@ -276,6 +343,31 @@
                         </table>
                         <p id="emptyResources" class="hidden text-center text-gray-400 py-8 text-sm">No resources yet.
                         </p>
+                    </div>
+                </div>
+
+                <!-- TAB: Links -->
+                <div id="tab-links" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold">Manage Links</h3>
+                        <button onclick="openModal('link')"
+                            class="bg-navy text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">+
+                            Add Link</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead class="bg-surfaceAlt text-xs text-gray-500 uppercase">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Label</th>
+                                    <th class="px-4 py-3 text-left">URL</th>
+                                    <th class="px-4 py-3 text-left">Category</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="linksBody" class="divide-y divide-gray-50"></tbody>
+                        </table>
+                        <p id="emptyLinks" class="hidden text-center text-gray-400 py-8 text-sm">No links yet. Click
+                            "+ Add Link" to create one.</p>
                     </div>
                 </div>
 
@@ -416,6 +508,54 @@
         </div>
     </div>
 
+    <!-- ===== MODAL: Add/Edit Link ===== -->
+    <div id="modal-link" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold" id="modalLinkTitle">Add New Link</h3>
+                <button onclick="closeModal('link')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form id="linkForm" class="space-y-4">
+                <input type="hidden" id="linkEditId" value="" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Label *</label>
+                    <input type="text" id="lLabel" required placeholder="e.g. University Portal"
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">URL *</label>
+                    <input type="url" id="lUrl" required placeholder="https://example.com"
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                        <select id="lCat" required
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent">
+                            <option value="Official">Official</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Social">Social</option>
+                            <option value="Tool">Tool</option>
+                            <option value="Career">Career</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <input type="text" id="lDesc" placeholder="Short note"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('link')"
+                        class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 py-2.5 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div id="toast"
         class="hidden fixed top-4 right-4 z-[100] bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
@@ -445,12 +585,20 @@
                 { id: 2, name: 'OS \u2014 Galvin 9th Ed', type: 'eBook', size: '15 MB' },
                 { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
                 { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
+            ],
+            links: [
+                { id: 1, label: 'University Portal', url: 'https://university.edu', cat: 'Official', desc: 'Main university website' },
+                { id: 2, label: 'CSE Department', url: 'https://cse.university.edu', cat: 'Academic', desc: 'Department homepage' },
+                { id: 3, label: 'Placement Cell', url: 'https://placement.university.edu', cat: 'Career', desc: 'Training & placements' }
             ]
         };
 
         // Load from localStorage or use defaults
         let data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
-        let nextId = JSON.parse(localStorage.getItem('cspoint_nextId')) || { updates: 8, deadlines: 6, resources: 5 };
+        // Ensure links array exists for older localStorage data
+        if (!data.links) data.links = JSON.parse(JSON.stringify(DEFAULT_DATA.links));
+        let nextId = JSON.parse(localStorage.getItem('cspoint_nextId')) || { updates: 8, deadlines: 6, resources: 5, links: 4 };
+        if (!nextId.links) nextId.links = 4;
 
         function saveData() {
             localStorage.setItem('cspoint_data', JSON.stringify(data));
@@ -458,9 +606,11 @@
         }
 
         // ===== LOGIN =====
+        let adminPassword = localStorage.getItem('cspoint_admin_pass') || 'admin';
+
         document.getElementById('loginForm').addEventListener('submit', e => {
             e.preventDefault();
-            if (document.getElementById('loginPass').value === 'admin') {
+            if (document.getElementById('loginPass').value === adminPassword) {
                 document.getElementById('loginView').classList.add('hidden');
                 document.getElementById('dashView').classList.remove('hidden');
                 renderAll();
@@ -468,6 +618,44 @@
                 document.getElementById('loginError').classList.remove('hidden');
             }
         });
+
+        // ===== FORGOT PASSWORD FLOW =====
+        function handleForgotStep1() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email) return;
+            document.getElementById('forgotStep1').classList.add('hidden');
+            document.getElementById('forgotStep2').classList.remove('hidden');
+        }
+        function handleForgotStep2() {
+            if (document.getElementById('forgotCode').value === '1234') {
+                document.getElementById('forgotStep2').classList.add('hidden');
+                document.getElementById('forgotStep3').classList.remove('hidden');
+            } else {
+                document.getElementById('forgotCode').style.borderColor = '#ef4444';
+            }
+        }
+        function handleForgotStep3() {
+            const np = document.getElementById('newPass').value;
+            const cp = document.getElementById('confirmPass').value;
+            const err = document.getElementById('forgotPassError');
+            if (np.length < 4) { err.textContent = 'Password must be at least 4 characters.'; err.classList.remove('hidden'); return; }
+            if (np !== cp) { err.textContent = 'Passwords do not match.'; err.classList.remove('hidden'); return; }
+            adminPassword = np;
+            localStorage.setItem('cspoint_admin_pass', np);
+            document.getElementById('forgotStep3').classList.add('hidden');
+            document.getElementById('forgotSuccess').classList.remove('hidden');
+        }
+        function closeForgotModal() {
+            document.getElementById('forgotModal').classList.add('hidden');
+            document.getElementById('forgotStep1').classList.remove('hidden');
+            document.getElementById('forgotStep2').classList.add('hidden');
+            document.getElementById('forgotStep3').classList.add('hidden');
+            document.getElementById('forgotSuccess').classList.add('hidden');
+            document.getElementById('forgotEmail').value = '';
+            document.getElementById('forgotCode').value = '';
+            document.getElementById('newPass').value = '';
+            document.getElementById('confirmPass').value = '';
+        }
         function logout() {
             document.getElementById('dashView').classList.add('hidden');
             document.getElementById('loginView').classList.remove('hidden');
@@ -479,7 +667,7 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.getElementById('tab-' + tab).classList.remove('hidden');
             document.querySelectorAll('.sidebar-link').forEach(l => { l.classList.remove('active'); if (l.dataset.tab === tab) l.classList.add('active') });
-            const titles = { dashboard: 'Dashboard', updates: 'Manage Updates', deadlines: 'Manage Deadlines', resources: 'Manage Resources' };
+            const titles = { dashboard: 'Dashboard', updates: 'Manage Updates', deadlines: 'Manage Deadlines', resources: 'Manage Resources', links: 'Manage Links' };
             document.getElementById('pageTitle').textContent = titles[tab] || 'Dashboard';
         }
 
@@ -502,7 +690,7 @@
         const statusColors = { 'Open': 'bg-green-50 text-green-700', 'Closing Soon': 'bg-red-50 text-red-700', 'Tomorrow': 'bg-amber-50 text-amber-700', 'Results Out': 'bg-blue-50 text-blue-700' };
 
         // ===== RENDER =====
-        function renderAll() { renderUpdates(); renderDeadlines(); renderResources(); updateStats(); }
+        function renderAll() { renderUpdates(); renderDeadlines(); renderResources(); renderLinks(); updateStats(); }
 
         function renderUpdates() {
             const tb = document.getElementById('updatesBody');
@@ -549,10 +737,27 @@
         </td></tr>`).join('');
         }
 
+        function renderLinks() {
+            const tb = document.getElementById('linksBody');
+            const empty = document.getElementById('emptyLinks');
+            if (!data.links.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            const linkCatColors = { Official: 'bg-blue-50 text-blue-700', Academic: 'bg-green-50 text-green-700', Social: 'bg-pink-50 text-pink-700', Tool: 'bg-purple-50 text-purple-700', Career: 'bg-amber-50 text-amber-700', Other: 'bg-gray-100 text-gray-700' };
+            tb.innerHTML = data.links.map(l => `<tr>
+        <td class="px-4 py-3 font-medium">${l.label}</td>
+        <td class="px-4 py-3"><a href="${l.url}" target="_blank" class="text-accent hover:underline text-xs truncate block max-w-[200px]">${l.url}</a></td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${linkCatColors[l.cat] || ''}">${l.cat}</span></td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <button onclick="editLink(${l.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
+          <button onclick="deleteItem('links',${l.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
+        </td></tr>`).join('');
+        }
+
         function updateStats() {
             document.getElementById('statUpdates').textContent = data.updates.length;
             document.getElementById('statDeadlines').textContent = data.deadlines.length;
             document.getElementById('statResources').textContent = data.resources.length;
+            document.getElementById('statLinks').textContent = data.links.length;
         }
 
         // ===== CRUD: UPDATES =====
@@ -611,6 +816,26 @@
             document.getElementById('rSize').value = r.size || '';
             document.getElementById('modalResourceTitle').textContent = 'Edit Resource';
             openModal('resource');
+        }
+
+        // ===== CRUD: LINKS =====
+        document.getElementById('linkForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const editId = document.getElementById('linkEditId').value;
+            const item = { label: document.getElementById('lLabel').value, url: document.getElementById('lUrl').value, cat: document.getElementById('lCat').value, desc: document.getElementById('lDesc').value };
+            if (editId) { const idx = data.links.findIndex(l => l.id == editId); if (idx > -1) data.links[idx] = { ...data.links[idx], ...item }; showToast('Link edited!'); }
+            else { item.id = nextId.links++; data.links.unshift(item); showToast('Link added!'); }
+            saveData(); closeModal('link'); renderAll();
+        });
+        function editLink(id) {
+            const l = data.links.find(x => x.id === id); if (!l) return;
+            document.getElementById('linkEditId').value = id;
+            document.getElementById('lLabel').value = l.label;
+            document.getElementById('lUrl').value = l.url;
+            document.getElementById('lCat').value = l.cat;
+            document.getElementById('lDesc').value = l.desc || '';
+            document.getElementById('modalLinkTitle').textContent = 'Edit Link';
+            openModal('link');
         }
 
         // ===== DELETE =====
