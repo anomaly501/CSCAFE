@@ -286,6 +286,8 @@
                                     <th class="px-4 py-3 text-left">Title</th>
                                     <th class="px-4 py-3 text-left">Category</th>
                                     <th class="px-4 py-3 text-left">Date</th>
+                                    <th class="px-4 py-3 text-left">Source</th>
+                                    <th class="px-4 py-3 text-left">Register</th>
                                     <th class="px-4 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -311,6 +313,7 @@
                                     <th class="px-4 py-3 text-left">Event</th>
                                     <th class="px-4 py-3 text-left">Deadline</th>
                                     <th class="px-4 py-3 text-left">Status</th>
+                                    <th class="px-4 py-3 text-left">Link</th>
                                     <th class="px-4 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -414,6 +417,18 @@
                             class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Source Link</label>
+                        <input type="url" id="uLink" placeholder="https://original-notice.com"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Registration Link</label>
+                        <input type="url" id="uRegLink" placeholder="https://register-here.com"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
+                    </div>
+                </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('update')"
                         class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</button>
@@ -455,6 +470,11 @@
                             <option value="Results Out">Results Out</option>
                         </select>
                     </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Registration / Source Link</label>
+                    <input type="url" id="dLink" placeholder="https://registration-site.com"
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('deadline')"
@@ -565,20 +585,20 @@
         // ===== DATA STORE (with localStorage persistence) =====
         const DEFAULT_DATA = {
             updates: [
-                { id: 1, title: 'End Semester Examination Schedule Released \u2014 Spring 2026', desc: 'Final schedule for the CSE department end-term exams has been published. Exams commence from May 15th, 2026.', cat: 'Exams', date: '2026-02-18' },
-                { id: 2, title: 'Summer Research Internship at IIT Bombay \u2014 Applications Open', desc: 'Applications are invited for the Summer Research Fellowship Program 2026. Eligible for 3rd-year B.Tech students.', cat: 'Internship', date: '2026-02-17' },
-                { id: 3, title: '3-Day Workshop on Generative AI & Large Language Models', desc: 'Hands-on workshop covering Transformers, PyTorch, and deploying LLMs. Registration closes Feb 25.', cat: 'Workshop', date: '2026-02-16' },
-                { id: 4, title: 'GATE 2026 Results Declared \u2014 Check Scorecard Now', desc: 'IIT Delhi has released the GATE 2026 results. Candidates can download their scorecard from the official portal.', cat: 'Results', date: '2026-02-15' },
-                { id: 5, title: 'Holiday Notice: University Closed for Maha Shivaratri', desc: 'All departments will remain closed on Feb 26 on account of Maha Shivaratri. Classes resume Feb 27.', cat: 'Notice', date: '2026-02-14' },
-                { id: 6, title: 'Google Code Jam 2026 \u2014 Qualification Round Registration Open', desc: 'Register for the qualification round. Open to all participants globally. Top scorers proceed to Round 1.', cat: 'Contest', date: '2026-02-13' },
-                { id: 7, title: 'Microsoft Engage 2026 \u2014 Mentorship Program Applications', desc: 'Microsoft India flagship mentorship and internship program for pre-final year students. Apply by March 10.', cat: 'Internship', date: '2026-02-12' }
+                { id: 1, title: 'End Semester Examination Schedule Released \u2014 Spring 2026', desc: 'Final schedule for the CSE department end-term exams has been published. Exams commence from May 15th, 2026.', cat: 'Exams', date: '2026-02-18', link: 'https://university.edu/exams/spring2026', regLink: '' },
+                { id: 2, title: 'Summer Research Internship at IIT Bombay \u2014 Applications Open', desc: 'Applications are invited for the Summer Research Fellowship Program 2026. Eligible for 3rd-year B.Tech students.', cat: 'Internship', date: '2026-02-17', link: 'https://iitb.ac.in/internship', regLink: 'https://iitb.ac.in/internship/apply' },
+                { id: 3, title: '3-Day Workshop on Generative AI & Large Language Models', desc: 'Hands-on workshop covering Transformers, PyTorch, and deploying LLMs. Registration closes Feb 25.', cat: 'Workshop', date: '2026-02-16', link: 'https://workshop.cse.edu/genai', regLink: 'https://workshop.cse.edu/genai/register' },
+                { id: 4, title: 'GATE 2026 Results Declared \u2014 Check Scorecard Now', desc: 'IIT Delhi has released the GATE 2026 results. Candidates can download their scorecard from the official portal.', cat: 'Results', date: '2026-02-15', link: 'https://gate2026.iitd.ac.in/results', regLink: '' },
+                { id: 5, title: 'Holiday Notice: University Closed for Maha Shivaratri', desc: 'All departments will remain closed on Feb 26 on account of Maha Shivaratri. Classes resume Feb 27.', cat: 'Notice', date: '2026-02-14', link: '', regLink: '' },
+                { id: 6, title: 'Google Code Jam 2026 \u2014 Qualification Round Registration Open', desc: 'Register for the qualification round. Open to all participants globally. Top scorers proceed to Round 1.', cat: 'Contest', date: '2026-02-13', link: 'https://codingcompetitions.withgoogle.com/codejam', regLink: 'https://codingcompetitions.withgoogle.com/codejam/register' },
+                { id: 7, title: 'Microsoft Engage 2026 \u2014 Mentorship Program Applications', desc: 'Microsoft India flagship mentorship and internship program for pre-final year students. Apply by March 10.', cat: 'Internship', date: '2026-02-12', link: 'https://microsoft.com/engage', regLink: 'https://microsoft.com/engage/apply' }
             ],
             deadlines: [
-                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon' },
-                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open' },
-                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow' },
-                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open' },
-                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out' }
+                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon', link: 'https://gate2027.iitm.ac.in/register' },
+                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open', link: 'https://careers.google.com/students/step' },
+                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow', link: 'https://hackallnight.dev/register' },
+                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open', link: 'https://mitacs.ca/globalink' },
+                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out', link: 'https://jeeadv.ac.in/results' }
             ],
             resources: [
                 { id: 1, name: 'Data Structures Notes', type: 'PDF', size: '2.4 MB' },
@@ -676,9 +696,10 @@
         function closeModal(type) {
             document.getElementById('modal-' + type).classList.add('hidden');
             document.getElementById(type + 'Form').reset();
-            document.getElementById(type === 'update' ? 'updateEditId' : type === 'deadline' ? 'deadlineEditId' : 'resourceEditId').value = '';
-            const mTitle = type === 'update' ? 'modalUpdateTitle' : type === 'deadline' ? 'modalDeadlineTitle' : 'modalResourceTitle';
-            document.getElementById(mTitle).textContent = 'Add New ' + type.charAt(0).toUpperCase() + type.slice(1);
+            const editIdMap = { update: 'updateEditId', deadline: 'deadlineEditId', resource: 'resourceEditId', link: 'linkEditId' };
+            document.getElementById(editIdMap[type]).value = '';
+            const mTitleMap = { update: 'modalUpdateTitle', deadline: 'modalDeadlineTitle', resource: 'modalResourceTitle', link: 'modalLinkTitle' };
+            document.getElementById(mTitleMap[type]).textContent = 'Add New ' + type.charAt(0).toUpperCase() + type.slice(1);
         }
         function showToast(msg) {
             const t = document.getElementById('toast'); t.textContent = msg; t.classList.remove('hidden');
@@ -701,6 +722,8 @@
         <td class="px-4 py-3 font-medium">${u.title}</td>
         <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${catColors[u.cat] || ''}">${u.cat}</span></td>
         <td class="px-4 py-3 text-gray-500">${u.date}</td>
+        <td class="px-4 py-3">${u.link ? `<a href="${u.link}" target="_blank" class="text-accent hover:underline text-xs">View ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+        <td class="px-4 py-3">${u.regLink ? `<a href="${u.regLink}" target="_blank" class="text-green-600 hover:underline text-xs font-semibold">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editUpdate(${u.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('updates',${u.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
@@ -716,6 +739,7 @@
         <td class="px-4 py-3 font-medium">${d.name}</td>
         <td class="px-4 py-3 text-gray-500">${d.date.replace('T', ' ')}</td>
         <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${statusColors[d.status] || ''}">${d.status}</span></td>
+        <td class="px-4 py-3">${d.link ? `<a href="${d.link}" target="_blank" class="text-accent hover:underline text-xs">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editDeadline(${d.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('deadlines',${d.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
@@ -764,7 +788,7 @@
         document.getElementById('updateForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('updateEditId').value;
-            const item = { title: document.getElementById('uTitle').value, desc: document.getElementById('uDesc').value, cat: document.getElementById('uCat').value, date: document.getElementById('uDate').value };
+            const item = { title: document.getElementById('uTitle').value, desc: document.getElementById('uDesc').value, cat: document.getElementById('uCat').value, date: document.getElementById('uDate').value, link: document.getElementById('uLink').value, regLink: document.getElementById('uRegLink').value };
             if (editId) { const idx = data.updates.findIndex(u => u.id == editId); if (idx > -1) data.updates[idx] = { ...data.updates[idx], ...item }; showToast('Update edited successfully!'); }
             else { item.id = nextId.updates++; data.updates.unshift(item); showToast('Update added successfully!'); }
             saveData(); closeModal('update'); renderAll();
@@ -776,6 +800,8 @@
             document.getElementById('uDesc').value = u.desc || '';
             document.getElementById('uCat').value = u.cat;
             document.getElementById('uDate').value = u.date;
+            document.getElementById('uLink').value = u.link || '';
+            document.getElementById('uRegLink').value = u.regLink || '';
             document.getElementById('modalUpdateTitle').textContent = 'Edit Update';
             openModal('update');
         }
@@ -784,7 +810,7 @@
         document.getElementById('deadlineForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('deadlineEditId').value;
-            const item = { name: document.getElementById('dName').value, date: document.getElementById('dDate').value, status: document.getElementById('dStatus').value };
+            const item = { name: document.getElementById('dName').value, date: document.getElementById('dDate').value, status: document.getElementById('dStatus').value, link: document.getElementById('dLink').value };
             if (editId) { const idx = data.deadlines.findIndex(d => d.id == editId); if (idx > -1) data.deadlines[idx] = { ...data.deadlines[idx], ...item }; showToast('Deadline edited!'); }
             else { item.id = nextId.deadlines++; data.deadlines.unshift(item); showToast('Deadline added!'); }
             saveData(); closeModal('deadline'); renderAll();
@@ -795,6 +821,7 @@
             document.getElementById('dName').value = d.name;
             document.getElementById('dDate').value = d.date;
             document.getElementById('dStatus').value = d.status;
+            document.getElementById('dLink').value = d.link || '';
             document.getElementById('modalDeadlineTitle').textContent = 'Edit Deadline';
             openModal('deadline');
         }
