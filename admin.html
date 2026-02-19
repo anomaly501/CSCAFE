@@ -88,64 +88,12 @@
                 <button type="submit"
                     class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors">Sign
                     In</button>
-                <div class="text-center mt-3">
-                    <button type="button" onclick="document.getElementById('forgotModal').classList.remove('hidden')"
-                        class="text-xs text-accent hover:underline font-medium">Forgot Password?</button>
-                </div>
+
             </form>
         </div>
     </div>
 
-    <!-- ===== FORGOT PASSWORD MODAL ===== -->
-    <div id="forgotModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-navy">Reset Password</h3>
-                <button onclick="document.getElementById('forgotModal').classList.add('hidden')"
-                    class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
-            </div>
-            <div id="forgotStep1">
-                <p class="text-sm text-gray-500 mb-4">Enter your admin email to receive a reset code.</p>
-                <input type="email" id="forgotEmail" placeholder="admin@cspoint.edu"
-                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
-                <button onclick="handleForgotStep1()"
-                    class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Send
-                    Reset Code</button>
-            </div>
-            <div id="forgotStep2" class="hidden">
-                <p class="text-sm text-gray-500 mb-2">Enter the 4-digit code sent to your email.</p>
-                <p class="text-xs text-accent mb-3 font-medium">Hint: demo code is <strong>1234</strong></p>
-                <input type="text" id="forgotCode" placeholder="Enter 4-digit code" maxlength="4"
-                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-center tracking-[0.5em] font-mono font-bold focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
-                <button onclick="handleForgotStep2()"
-                    class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Verify
-                    Code</button>
-            </div>
-            <div id="forgotStep3" class="hidden">
-                <p class="text-sm text-gray-500 mb-4">Create your new password.</p>
-                <input type="password" id="newPass" placeholder="New password"
-                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
-                <input type="password" id="confirmPass" placeholder="Confirm password"
-                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent mb-3" />
-                <p id="forgotPassError" class="hidden text-xs text-red-500 mb-2"></p>
-                <button onclick="handleForgotStep3()"
-                    class="w-full bg-green-600 text-white font-semibold py-2.5 rounded-lg hover:bg-green-700 transition-colors text-sm">Reset
-                    Password</button>
-            </div>
-            <div id="forgotSuccess" class="hidden text-center">
-                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-50 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <p class="text-sm font-semibold text-gray-800">Password Reset Successfully!</p>
-                <p class="text-xs text-gray-400 mt-1">You can now login with your new password.</p>
-                <button onclick="closeForgotModal()"
-                    class="mt-4 w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors text-sm">Back
-                    to Login</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- ===== DASHBOARD ===== -->
     <div id="dashView" class="hidden min-h-screen flex">
@@ -650,14 +598,8 @@
             return String(str || '').slice(0, max);
         }
 
-        async function hashPassword(pass) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(pass + 'cspoint_salt_2026');
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // ===== LOGIN (with hashing + rate limiting) =====
+        // ===== LOGIN (with rate limiting) =====
+        const ADMIN_PASSWORD = 'Eldorado@123';
         let loginAttempts = 0;
         let lockoutUntil = 0;
         const MAX_ATTEMPTS = 5;
@@ -665,25 +607,12 @@
         const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
         let sessionTimer = null;
 
-        // Initialize password hash if not set (migrate from plaintext)
-        (async () => {
-            const stored = localStorage.getItem('cspoint_admin_hash');
-            const CURRENT_PASS_VERSION = 'v2';
-            if (!stored || localStorage.getItem('cspoint_pass_version') !== CURRENT_PASS_VERSION) {
-                const hash = await hashPassword('Eldorado@123');
-                localStorage.setItem('cspoint_admin_hash', hash);
-                localStorage.setItem('cspoint_pass_version', CURRENT_PASS_VERSION);
-                localStorage.removeItem('cspoint_admin_pass'); // remove plaintext
-            }
-        })();
-
         function startSession() {
             clearTimeout(sessionTimer);
             sessionTimer = setTimeout(() => {
                 showToast('Session expired. Please login again.');
                 logout();
             }, SESSION_TIMEOUT_MS);
-            // Reset timer on user activity
             ['click', 'keydown', 'mousemove', 'scroll'].forEach(evt => {
                 document.addEventListener(evt, () => {
                     clearTimeout(sessionTimer);
@@ -695,10 +624,9 @@
             });
         }
 
-        document.getElementById('loginForm').addEventListener('submit', async e => {
+        document.getElementById('loginForm').addEventListener('submit', e => {
             e.preventDefault();
             const errEl = document.getElementById('loginError');
-            // Check lockout
             if (Date.now() < lockoutUntil) {
                 const secs = Math.ceil((lockoutUntil - Date.now()) / 1000);
                 errEl.textContent = `Too many attempts. Try again in ${secs}s.`;
@@ -706,9 +634,7 @@
                 return;
             }
             const pass = document.getElementById('loginPass').value;
-            const hash = await hashPassword(pass);
-            const storedHash = localStorage.getItem('cspoint_admin_hash');
-            if (hash === storedHash) {
+            if (pass === ADMIN_PASSWORD) {
                 loginAttempts = 0;
                 errEl.classList.add('hidden');
                 document.getElementById('loginView').classList.add('hidden');
@@ -727,44 +653,7 @@
             }
         });
 
-        // ===== FORGOT PASSWORD FLOW =====
-        function handleForgotStep1() {
-            const email = document.getElementById('forgotEmail').value.trim();
-            if (!email) return;
-            document.getElementById('forgotStep1').classList.add('hidden');
-            document.getElementById('forgotStep2').classList.remove('hidden');
-        }
-        function handleForgotStep2() {
-            if (document.getElementById('forgotCode').value === '1234') {
-                document.getElementById('forgotStep2').classList.add('hidden');
-                document.getElementById('forgotStep3').classList.remove('hidden');
-            } else {
-                document.getElementById('forgotCode').style.borderColor = '#ef4444';
-            }
-        }
-        async function handleForgotStep3() {
-            const np = document.getElementById('newPass').value;
-            const cp = document.getElementById('confirmPass').value;
-            const err = document.getElementById('forgotPassError');
-            if (np.length < 4) { err.textContent = 'Password must be at least 4 characters.'; err.classList.remove('hidden'); return; }
-            if (np !== cp) { err.textContent = 'Passwords do not match.'; err.classList.remove('hidden'); return; }
-            const hash = await hashPassword(np);
-            localStorage.setItem('cspoint_admin_hash', hash);
-            localStorage.removeItem('cspoint_admin_pass');
-            document.getElementById('forgotStep3').classList.add('hidden');
-            document.getElementById('forgotSuccess').classList.remove('hidden');
-        }
-        function closeForgotModal() {
-            document.getElementById('forgotModal').classList.add('hidden');
-            document.getElementById('forgotStep1').classList.remove('hidden');
-            document.getElementById('forgotStep2').classList.add('hidden');
-            document.getElementById('forgotStep3').classList.add('hidden');
-            document.getElementById('forgotSuccess').classList.add('hidden');
-            document.getElementById('forgotEmail').value = '';
-            document.getElementById('forgotCode').value = '';
-            document.getElementById('newPass').value = '';
-            document.getElementById('confirmPass').value = '';
-        }
+
         function logout() {
             clearTimeout(sessionTimer);
             document.getElementById('dashView').classList.add('hidden');

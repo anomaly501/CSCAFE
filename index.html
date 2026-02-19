@@ -613,22 +613,23 @@
                 const author = u.author || 'CSPOINT Team';
                 const sLink = sanitizeUrl(u.link);
                 const sReg = sanitizeUrl(u.regLink);
+                const postUrl = 'post.html?id=' + u.id;
                 return `<article class="bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover slide-in" style="animation-delay:${i * 60}ms">
             <div class="flex flex-col sm:flex-row">
-                <div class="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center text-5xl flex-shrink-0">${emoji}</div>
+                <a href="${postUrl}" class="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center text-5xl flex-shrink-0 hover:opacity-80 transition-opacity">${emoji}</a>
                 <div class="flex-1 p-5">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="cat-badge ${style}">${escapeHTML(u.cat)}</span>
                         <span class="text-xs text-gray-400">${readTime} min read</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 leading-snug mb-2 line-clamp-2"><a href="${sLink || '#'}" ${sLink ? 'target="_blank" rel="noopener noreferrer"' : ''} class="hover:text-accent transition-colors">${escapeHTML(u.title)}</a></h3>
+                    <h3 class="font-bold text-gray-900 leading-snug mb-2 line-clamp-2"><a href="${postUrl}" class="hover:text-accent transition-colors">${escapeHTML(u.title)}</a></h3>
                     <p class="text-sm text-gray-500 line-clamp-2 mb-3">${escapeHTML(u.desc)}</p>
                     <div class="flex items-center justify-between text-xs text-gray-400">
                         <div class="flex items-center gap-3">
                             <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${escapeHTML(author)}</span>
                             <span>${dateLabel}</span>
                         </div>
-                        ${sReg ? `<a href="${sReg}" target="_blank" rel="noopener noreferrer" class="text-accent font-bold hover:underline text-xs">Apply Now →</a>` : ''}
+                        <a href="${postUrl}" class="text-accent font-bold hover:underline text-xs">Read More →</a>
                     </div>
                 </div>
             </div>
