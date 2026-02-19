@@ -598,13 +598,27 @@
             return String(str || '').slice(0, max);
         }
 
-        // ===== LOGIN (with rate limiting) =====
-        const ADMIN_PASSWORD = 'Eldorado@123';
+        // ===== SECURE LOGIN (with rate limiting) =====
+        // Password hash (never stored in plaintext)
+        const _H = '3pyjcidqcg';
+        function _k(s) {
+            let a = 0xdeadbeef, b = 0x41c6ce57;
+            for (let i = 0; i < s.length; i++) {
+                let c = s.charCodeAt(i);
+                a = Math.imul(a ^ c, 2654435761);
+                b = Math.imul(b ^ c, 1597334677);
+            }
+            a = Math.imul(a ^ (a >>> 16), 2246822507);
+            a ^= Math.imul(b ^ (b >>> 13), 3266489909);
+            b = Math.imul(b ^ (b >>> 16), 2246822507);
+            b ^= Math.imul(a ^ (a >>> 13), 3266489909);
+            return (4294967296 * (2097151 & b) + (a >>> 0)).toString(36);
+        }
         let loginAttempts = 0;
         let lockoutUntil = 0;
         const MAX_ATTEMPTS = 5;
-        const LOCKOUT_MS = 30000; // 30 seconds
-        const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+        const LOCKOUT_MS = 30000;
+        const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
         let sessionTimer = null;
 
         function startSession() {
@@ -634,7 +648,7 @@
                 return;
             }
             const pass = document.getElementById('loginPass').value;
-            if (pass === ADMIN_PASSWORD) {
+            if (_k(pass + '_cspoint_2026') === _H) {
                 loginAttempts = 0;
                 errEl.classList.add('hidden');
                 document.getElementById('loginView').classList.add('hidden');
