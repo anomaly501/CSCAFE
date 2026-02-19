@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Admin Portal | CSPOINT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -625,17 +628,101 @@
             localStorage.setItem('cspoint_nextId', JSON.stringify(nextId));
         }
 
-        // ===== LOGIN =====
-        let adminPassword = localStorage.getItem('cspoint_admin_pass') || 'admin';
+        // ===== SECURITY UTILITIES =====
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(String(str)));
+            return div.innerHTML;
+        }
 
-        document.getElementById('loginForm').addEventListener('submit', e => {
+        function sanitizeUrl(url) {
+            if (!url) return '';
+            const trimmed = url.trim();
+            try {
+                const parsed = new URL(trimmed);
+                if (['http:', 'https:', 'mailto:'].includes(parsed.protocol)) return trimmed;
+                return '';
+            } catch { return ''; }
+        }
+
+        function validateLength(str, max = 500) {
+            return String(str || '').slice(0, max);
+        }
+
+        async function hashPassword(pass) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(pass + 'cspoint_salt_2026');
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // ===== LOGIN (with hashing + rate limiting) =====
+        let loginAttempts = 0;
+        let lockoutUntil = 0;
+        const MAX_ATTEMPTS = 5;
+        const LOCKOUT_MS = 30000; // 30 seconds
+        const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+        let sessionTimer = null;
+
+        // Initialize password hash if not set (migrate from plaintext)
+        (async () => {
+            const stored = localStorage.getItem('cspoint_admin_hash');
+            if (!stored) {
+                const oldPass = localStorage.getItem('cspoint_admin_pass') || 'admin';
+                const hash = await hashPassword(oldPass);
+                localStorage.setItem('cspoint_admin_hash', hash);
+                localStorage.removeItem('cspoint_admin_pass'); // remove plaintext
+            }
+        })();
+
+        function startSession() {
+            clearTimeout(sessionTimer);
+            sessionTimer = setTimeout(() => {
+                showToast('Session expired. Please login again.');
+                logout();
+            }, SESSION_TIMEOUT_MS);
+            // Reset timer on user activity
+            ['click', 'keydown', 'mousemove', 'scroll'].forEach(evt => {
+                document.addEventListener(evt, () => {
+                    clearTimeout(sessionTimer);
+                    sessionTimer = setTimeout(() => {
+                        showToast('Session expired. Please login again.');
+                        logout();
+                    }, SESSION_TIMEOUT_MS);
+                }, { passive: true });
+            });
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async e => {
             e.preventDefault();
-            if (document.getElementById('loginPass').value === adminPassword) {
+            const errEl = document.getElementById('loginError');
+            // Check lockout
+            if (Date.now() < lockoutUntil) {
+                const secs = Math.ceil((lockoutUntil - Date.now()) / 1000);
+                errEl.textContent = `Too many attempts. Try again in ${secs}s.`;
+                errEl.classList.remove('hidden');
+                return;
+            }
+            const pass = document.getElementById('loginPass').value;
+            const hash = await hashPassword(pass);
+            const storedHash = localStorage.getItem('cspoint_admin_hash');
+            if (hash === storedHash) {
+                loginAttempts = 0;
+                errEl.classList.add('hidden');
                 document.getElementById('loginView').classList.add('hidden');
                 document.getElementById('dashView').classList.remove('hidden');
+                startSession();
                 renderAll();
             } else {
-                document.getElementById('loginError').classList.remove('hidden');
+                loginAttempts++;
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    lockoutUntil = Date.now() + LOCKOUT_MS;
+                    errEl.textContent = `Too many failed attempts. Locked for 30s.`;
+                } else {
+                    errEl.textContent = `Invalid password. ${MAX_ATTEMPTS - loginAttempts} attempt(s) remaining.`;
+                }
+                errEl.classList.remove('hidden');
             }
         });
 
@@ -654,14 +741,15 @@
                 document.getElementById('forgotCode').style.borderColor = '#ef4444';
             }
         }
-        function handleForgotStep3() {
+        async function handleForgotStep3() {
             const np = document.getElementById('newPass').value;
             const cp = document.getElementById('confirmPass').value;
             const err = document.getElementById('forgotPassError');
             if (np.length < 4) { err.textContent = 'Password must be at least 4 characters.'; err.classList.remove('hidden'); return; }
             if (np !== cp) { err.textContent = 'Passwords do not match.'; err.classList.remove('hidden'); return; }
-            adminPassword = np;
-            localStorage.setItem('cspoint_admin_pass', np);
+            const hash = await hashPassword(np);
+            localStorage.setItem('cspoint_admin_hash', hash);
+            localStorage.removeItem('cspoint_admin_pass');
             document.getElementById('forgotStep3').classList.add('hidden');
             document.getElementById('forgotSuccess').classList.remove('hidden');
         }
@@ -677,6 +765,7 @@
             document.getElementById('confirmPass').value = '';
         }
         function logout() {
+            clearTimeout(sessionTimer);
             document.getElementById('dashView').classList.add('hidden');
             document.getElementById('loginView').classList.remove('hidden');
             document.getElementById('loginPass').value = '';
@@ -718,16 +807,18 @@
             const empty = document.getElementById('emptyUpdates');
             if (!data.updates.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
-            tb.innerHTML = data.updates.map(u => `<tr>
-        <td class="px-4 py-3 font-medium">${u.title}</td>
-        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${catColors[u.cat] || ''}">${u.cat}</span></td>
-        <td class="px-4 py-3 text-gray-500">${u.date}</td>
-        <td class="px-4 py-3">${u.link ? `<a href="${u.link}" target="_blank" class="text-accent hover:underline text-xs">View ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
-        <td class="px-4 py-3">${u.regLink ? `<a href="${u.regLink}" target="_blank" class="text-green-600 hover:underline text-xs font-semibold">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+            tb.innerHTML = data.updates.map(u => {
+                const sLink = sanitizeUrl(u.link); const sRegLink = sanitizeUrl(u.regLink); return `<tr>
+        <td class="px-4 py-3 font-medium">${escapeHTML(u.title)}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${catColors[u.cat] || ''}">${escapeHTML(u.cat)}</span></td>
+        <td class="px-4 py-3 text-gray-500">${escapeHTML(u.date)}</td>
+        <td class="px-4 py-3">${sLink ? `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline text-xs">View ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+        <td class="px-4 py-3">${sRegLink ? `<a href="${sRegLink}" target="_blank" rel="noopener noreferrer" class="text-green-600 hover:underline text-xs font-semibold">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editUpdate(${u.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('updates',${u.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
-        </td></tr>`).join('');
+        </td></tr>`;
+            }).join('');
         }
 
         function renderDeadlines() {
@@ -735,15 +826,17 @@
             const empty = document.getElementById('emptyDeadlines');
             if (!data.deadlines.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
-            tb.innerHTML = data.deadlines.map(d => `<tr>
-        <td class="px-4 py-3 font-medium">${d.name}</td>
-        <td class="px-4 py-3 text-gray-500">${d.date.replace('T', ' ')}</td>
-        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${statusColors[d.status] || ''}">${d.status}</span></td>
-        <td class="px-4 py-3">${d.link ? `<a href="${d.link}" target="_blank" class="text-accent hover:underline text-xs">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+            tb.innerHTML = data.deadlines.map(d => {
+                const sLink = sanitizeUrl(d.link); return `<tr>
+        <td class="px-4 py-3 font-medium">${escapeHTML(d.name)}</td>
+        <td class="px-4 py-3 text-gray-500">${escapeHTML(d.date.replace('T', ' '))}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${statusColors[d.status] || ''}">${escapeHTML(d.status)}</span></td>
+        <td class="px-4 py-3">${sLink ? `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline text-xs">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editDeadline(${d.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('deadlines',${d.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
-        </td></tr>`).join('');
+        </td></tr>`;
+            }).join('');
         }
 
         function renderResources() {
@@ -752,9 +845,9 @@
             if (!data.resources.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
             tb.innerHTML = data.resources.map(r => `<tr>
-        <td class="px-4 py-3 font-medium">${r.name}</td>
-        <td class="px-4 py-3 text-gray-500">${r.type}</td>
-        <td class="px-4 py-3 text-gray-500">${r.size || '—'}</td>
+        <td class="px-4 py-3 font-medium">${escapeHTML(r.name)}</td>
+        <td class="px-4 py-3 text-gray-500">${escapeHTML(r.type)}</td>
+        <td class="px-4 py-3 text-gray-500">${escapeHTML(r.size) || '—'}</td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editResource(${r.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('resources',${r.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
@@ -767,14 +860,16 @@
             if (!data.links.length) { tb.innerHTML = ''; empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
             const linkCatColors = { Official: 'bg-blue-50 text-blue-700', Academic: 'bg-green-50 text-green-700', Social: 'bg-pink-50 text-pink-700', Tool: 'bg-purple-50 text-purple-700', Career: 'bg-amber-50 text-amber-700', Other: 'bg-gray-100 text-gray-700' };
-            tb.innerHTML = data.links.map(l => `<tr>
-        <td class="px-4 py-3 font-medium">${l.label}</td>
-        <td class="px-4 py-3"><a href="${l.url}" target="_blank" class="text-accent hover:underline text-xs truncate block max-w-[200px]">${l.url}</a></td>
-        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${linkCatColors[l.cat] || ''}">${l.cat}</span></td>
+            tb.innerHTML = data.links.map(l => {
+                const sUrl = sanitizeUrl(l.url); return `<tr>
+        <td class="px-4 py-3 font-medium">${escapeHTML(l.label)}</td>
+        <td class="px-4 py-3">${sUrl ? `<a href="${sUrl}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline text-xs truncate block max-w-[200px]">${escapeHTML(l.url)}</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${linkCatColors[l.cat] || ''}">${escapeHTML(l.cat)}</span></td>
         <td class="px-4 py-3 text-right space-x-2">
           <button onclick="editLink(${l.id})" class="text-accent hover:text-navy font-medium text-xs">Edit</button>
           <button onclick="deleteItem('links',${l.id})" class="text-red-400 hover:text-red-600 font-medium text-xs">Delete</button>
-        </td></tr>`).join('');
+        </td></tr>`;
+            }).join('');
         }
 
         function updateStats() {
@@ -788,7 +883,7 @@
         document.getElementById('updateForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('updateEditId').value;
-            const item = { title: document.getElementById('uTitle').value, desc: document.getElementById('uDesc').value, cat: document.getElementById('uCat').value, date: document.getElementById('uDate').value, link: document.getElementById('uLink').value, regLink: document.getElementById('uRegLink').value };
+            const item = { title: validateLength(document.getElementById('uTitle').value, 200), desc: validateLength(document.getElementById('uDesc').value, 1000), cat: validateLength(document.getElementById('uCat').value, 50), date: document.getElementById('uDate').value, link: sanitizeUrl(document.getElementById('uLink').value), regLink: sanitizeUrl(document.getElementById('uRegLink').value) };
             if (editId) { const idx = data.updates.findIndex(u => u.id == editId); if (idx > -1) data.updates[idx] = { ...data.updates[idx], ...item }; showToast('Update edited successfully!'); }
             else { item.id = nextId.updates++; data.updates.unshift(item); showToast('Update added successfully!'); }
             saveData(); closeModal('update'); renderAll();
@@ -810,7 +905,7 @@
         document.getElementById('deadlineForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('deadlineEditId').value;
-            const item = { name: document.getElementById('dName').value, date: document.getElementById('dDate').value, status: document.getElementById('dStatus').value, link: document.getElementById('dLink').value };
+            const item = { name: validateLength(document.getElementById('dName').value, 200), date: document.getElementById('dDate').value, status: validateLength(document.getElementById('dStatus').value, 50), link: sanitizeUrl(document.getElementById('dLink').value) };
             if (editId) { const idx = data.deadlines.findIndex(d => d.id == editId); if (idx > -1) data.deadlines[idx] = { ...data.deadlines[idx], ...item }; showToast('Deadline edited!'); }
             else { item.id = nextId.deadlines++; data.deadlines.unshift(item); showToast('Deadline added!'); }
             saveData(); closeModal('deadline'); renderAll();
@@ -830,7 +925,7 @@
         document.getElementById('resourceForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('resourceEditId').value;
-            const item = { name: document.getElementById('rName').value, type: document.getElementById('rType').value, size: document.getElementById('rSize').value };
+            const item = { name: validateLength(document.getElementById('rName').value, 200), type: validateLength(document.getElementById('rType').value, 50), size: validateLength(document.getElementById('rSize').value, 50) };
             if (editId) { const idx = data.resources.findIndex(r => r.id == editId); if (idx > -1) data.resources[idx] = { ...data.resources[idx], ...item }; showToast('Resource edited!'); }
             else { item.id = nextId.resources++; data.resources.unshift(item); showToast('Resource added!'); }
             saveData(); closeModal('resource'); renderAll();
@@ -849,7 +944,7 @@
         document.getElementById('linkForm').addEventListener('submit', e => {
             e.preventDefault();
             const editId = document.getElementById('linkEditId').value;
-            const item = { label: document.getElementById('lLabel').value, url: document.getElementById('lUrl').value, cat: document.getElementById('lCat').value, desc: document.getElementById('lDesc').value };
+            const item = { label: validateLength(document.getElementById('lLabel').value, 200), url: sanitizeUrl(document.getElementById('lUrl').value), cat: validateLength(document.getElementById('lCat').value, 50), desc: validateLength(document.getElementById('lDesc').value, 500) };
             if (editId) { const idx = data.links.findIndex(l => l.id == editId); if (idx > -1) data.links[idx] = { ...data.links[idx], ...item }; showToast('Link edited!'); }
             else { item.id = nextId.links++; data.links.unshift(item); showToast('Link added!'); }
             saveData(); closeModal('link'); renderAll();

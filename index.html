@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="description"
         content="CSPOINT — The ultimate CSE resource portal for students. Latest updates, internships, exam schedules, notes, and more." />
     <title>CSPOINT | CSE Resource Portal</title>
@@ -494,6 +497,23 @@
         };
         const typeColors = { PDF: 'bg-blue-50 text-blue-600', eBook: 'bg-green-50 text-green-600', ZIP: 'bg-purple-50 text-purple-600', Video: 'bg-rose-50 text-rose-600' };
 
+        // ===== SECURITY UTILITIES =====
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(String(str)));
+            return div.innerHTML;
+        }
+        function sanitizeUrl(url) {
+            if (!url) return '';
+            const trimmed = url.trim();
+            try {
+                const parsed = new URL(trimmed);
+                if (['http:', 'https:', 'mailto:'].includes(parsed.protocol)) return trimmed;
+                return '';
+            } catch { return ''; }
+        }
+
         // ===== RENDER UPDATES =====
         function renderUpdates() {
             const container = document.getElementById('updatesList');
@@ -506,15 +526,17 @@
             container.innerHTML = data.updates.map(u => {
                 const style = catStyles[u.cat] || 'bg-gray-100 text-gray-700 border-gray-200';
                 const readTime = Math.max(1, Math.ceil((u.desc || '').split(' ').length / 50));
-                return `<article class="update-card bg-white rounded-xl border border-gray-100 p-4 card-hover flex gap-4" data-category="${u.cat}" data-date="${u.date}">
-                    <div class="flex-shrink-0 mt-1"><span class="inline-block px-2.5 py-1 rounded-md text-xs font-bold ${style} border">${u.cat}</span></div>
+                const sLink = sanitizeUrl(u.link);
+                const sRegLink = sanitizeUrl(u.regLink);
+                return `<article class="update-card bg-white rounded-xl border border-gray-100 p-4 card-hover flex gap-4" data-category="${escapeHTML(u.cat)}" data-date="${escapeHTML(u.date)}">
+                    <div class="flex-shrink-0 mt-1"><span class="inline-block px-2.5 py-1 rounded-md text-xs font-bold ${style} border">${escapeHTML(u.cat)}</span></div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-gray-900 leading-snug mb-1"><a href="${u.link || '#'}" ${u.link ? 'target="_blank" rel="noopener"' : ''} class="hover:text-accentGlow transition-colors">${u.title}</a></h3>
-                        <p class="text-sm text-gray-500 line-clamp-2">${u.desc || ''}</p>
+                        <h3 class="font-semibold text-gray-900 leading-snug mb-1"><a href="${sLink || '#'}" ${sLink ? 'target="_blank" rel="noopener noreferrer"' : ''} class="hover:text-accentGlow transition-colors">${escapeHTML(u.title)}</a></h3>
+                        <p class="text-sm text-gray-500 line-clamp-2">${escapeHTML(u.desc)}</p>
                         <div class="flex items-center gap-4 mt-2 text-xs text-gray-400">
                             <span>\u23f1 ${readTime} min read</span><span>Updated: ${getRelativeDate(u.date)}</span>
-                            ${u.link ? `<a href="${u.link}" target="_blank" rel="noopener" class="text-accent font-semibold hover:underline ml-auto">Source \u2192</a>` : ''}
-                            ${u.regLink ? `<a href="${u.regLink}" target="_blank" rel="noopener" class="text-green-600 font-semibold hover:underline ${u.link ? '' : 'ml-auto'}">Register \u2192</a>` : ''}
+                            ${sLink ? `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="text-accent font-semibold hover:underline ml-auto">Source \u2192</a>` : ''}
+                            ${sRegLink ? `<a href="${sRegLink}" target="_blank" rel="noopener noreferrer" class="text-green-600 font-semibold hover:underline ${sLink ? '' : 'ml-auto'}">Register \u2192</a>` : ''}
                         </div>
                     </div>
                 </article>`;
@@ -528,19 +550,20 @@
             container.innerHTML = data.deadlines.map(d => {
                 const ss = statusStyleMap[d.status] || statusStyleMap['Open'];
                 const isResult = d.status === 'Results Out';
+                const sLink = sanitizeUrl(d.link);
                 return `<div class="p-4 hover:bg-surfaceAlt transition-colors">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-sm font-semibold text-gray-800">${d.name}</span>
-                        <span class="${ss.cls} text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">${d.status}</span>
+                        <span class="text-sm font-semibold text-gray-800">${escapeHTML(d.name)}</span>
+                        <span class="${ss.cls} text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">${escapeHTML(d.status)}</span>
                     </div>
                     <div class="flex justify-between text-xs text-gray-500">
                         <span>${isResult ? 'Published:' : 'Ends in:'}</span>
                         ${isResult
                         ? `<span class="text-xs font-medium text-blue-600">${new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>`
-                        : `<span class="countdown-digit font-mono font-bold ${ss.color}" data-countdown="${d.date}"></span>`
+                        : `<span class="countdown-digit font-mono font-bold ${ss.color}" data-countdown="${escapeHTML(d.date)}"></span>`
                     }
                     </div>
-                    ${d.link ? `<a href="${d.link}" target="_blank" rel="noopener" class="inline-block mt-2 text-[11px] font-bold text-accent hover:underline">Register / View \u2192</a>` : ''}
+                    ${sLink ? `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-[11px] font-bold text-accent hover:underline">Register / View \u2192</a>` : ''}
                 </div>`;
             }).join('');
         }
@@ -557,10 +580,10 @@
                             <div class="w-10 h-10 rounded-lg ${color} flex items-center justify-center">${icon}</div>
                             <button onclick="this.closest('.gradient-border').querySelector('.preview-frame').classList.toggle('open')" class="text-xs text-accent font-semibold hover:underline" aria-label="Toggle preview">Preview</button>
                         </div>
-                        <h4 class="font-bold text-gray-900 text-sm mb-1">${r.name}</h4>
-                        <p class="text-xs text-gray-400 mb-3">${r.type} \u2022 ${r.size || 'N/A'}</p>
+                        <h4 class="font-bold text-gray-900 text-sm mb-1">${escapeHTML(r.name)}</h4>
+                        <p class="text-xs text-gray-400 mb-3">${escapeHTML(r.type)} \u2022 ${escapeHTML(r.size) || 'N/A'}</p>
                         <div class="preview-frame mb-3 rounded-lg bg-surfaceAlt p-3">
-                            <p class="text-xs text-gray-500 italic">Preview content for ${r.name}</p>
+                            <p class="text-xs text-gray-500 italic">Preview content for ${escapeHTML(r.name)}</p>
                         </div>
                         <button class="w-full py-2 bg-navy text-white rounded-lg text-sm font-semibold hover:bg-navyLight transition-colors flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>Download
@@ -586,13 +609,14 @@
             container.innerHTML = data.links.map(l => {
                 const style = linkCatColors[l.cat] || linkCatColors['Other'];
                 const icon = linkCatIcons[l.cat] || linkCatIcons['Other'];
-                return `<a href="${l.url}" target="_blank" rel="noopener" class="group block bg-white rounded-xl border border-gray-100 p-4 card-hover">
+                const sUrl = sanitizeUrl(l.url);
+                return `<a href="${sUrl || '#'}" ${sUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="group block bg-white rounded-xl border border-gray-100 p-4 card-hover">
                     <div class="flex items-start gap-3">
                         <div class="w-10 h-10 rounded-lg ${style.split(' ').slice(0, 2).join(' ')} flex items-center justify-center flex-shrink-0">${icon}</div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-gray-900 text-sm group-hover:text-accent transition-colors">${l.label}</h4>
-                            <p class="text-xs text-gray-400 mt-0.5 truncate">${l.desc || l.url}</p>
-                            <span class="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${style} border">${l.cat}</span>
+                            <h4 class="font-bold text-gray-900 text-sm group-hover:text-accent transition-colors">${escapeHTML(l.label)}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5 truncate">${escapeHTML(l.desc || l.url)}</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${style} border">${escapeHTML(l.cat)}</span>
                         </div>
                         <svg class="w-4 h-4 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </div>
