@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="description" content="CSPOINT — Opportunity Details" />
+    <title>Loading... | CSPOINT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = { theme: { extend: { colors: { navy: '#0a1628', navyLight: '#12213a', navyMid: '#1a2d4a', slate: '#8892b0', lightSlate: '#a8b2d1', lightest: '#ccd6f6', accent: '#f59e0b', accentHover: '#d97706', electric: '#3b82f6', surface: '#f8fafc', surfaceAlt: '#f1f5f9' }, fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } } }
+    </script>
+    <style>
+        * {
+            scroll-behavior: smooth;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc
+        }
+
+        .cat-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 4px 12px;
+            border-radius: 6px
+        }
+
+        .card-hover {
+            transition: all .3s cubic-bezier(.25, .8, .25, 1)
+        }
+
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .12)
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-navy sticky top-0 z-50 shadow-xl shadow-navy/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="text-2xl font-black tracking-tight text-white">CS<span
+                        class="text-accent">POINT</span></a>
+                <nav class="hidden md:flex items-center space-x-1">
+                    <a href="index.html"
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">←
+                        Back to Home</a>
+                    <a href="index.html"
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">Internships</a>
+                    <a href="index.html"
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">Jobs</a>
+                    <a href="index.html"
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">Fellowships</a>
+                    <a href="index.html"
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">Hackathons</a>
+                </nav>
+                <a href="index.html" class="md:hidden text-lightest hover:text-accent font-semibold text-sm">← Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="postContent">
+        <!-- Loading state -->
+        <div id="loadingState" class="text-center py-20">
+            <div class="inline-block w-10 h-10 border-4 border-gray-200 border-t-accent rounded-full animate-spin">
+            </div>
+            <p class="text-gray-400 mt-4 text-sm">Loading opportunity...</p>
+        </div>
+
+        <!-- Not found state -->
+        <div id="notFoundState" class="hidden text-center py-20">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Opportunity Not Found</h2>
+            <p class="text-gray-500 mb-6">The opportunity you're looking for doesn't exist or has been removed.</p>
+            <a href="index.html"
+                class="inline-block bg-navy text-white font-bold px-6 py-3 rounded-xl text-sm hover:bg-navyLight transition-all">←
+                Back to Home</a>
+        </div>
+
+        <!-- Post content (filled by JS) -->
+        <article id="postArticle" class="hidden">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+                <a href="index.html" class="hover:text-accent transition-colors">Home</a>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <span id="breadcrumbCat" class="hover:text-accent transition-colors cursor-pointer"></span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <span class="text-gray-600 font-medium truncate max-w-xs" id="breadcrumbTitle"></span>
+            </nav>
+
+            <!-- Hero Banner -->
+            <div id="heroBanner" class="rounded-2xl overflow-hidden mb-8 p-8 md:p-12 text-white relative">
+                <div class="relative z-10">
+                    <span id="postCatBadge"
+                        class="cat-badge bg-white/20 backdrop-blur text-white mb-4 inline-block"></span>
+                    <h1 id="postTitle" class="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-4"></h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-white/70">
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span id="postAuthor"></span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span id="postDate"></span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span id="postReadTime"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Body -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="p-6 md:p-10">
+                    <!-- Description -->
+                    <div class="prose max-w-none">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-6 bg-accent rounded-full"></span>About This Opportunity
+                        </h2>
+                        <p id="postDesc" class="text-gray-600 leading-relaxed text-base mb-8"></p>
+                    </div>
+
+                    <!-- Key Details -->
+                    <div class="bg-surfaceAlt rounded-xl p-6 mb-8">
+                        <h3 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Key Details</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="keyDetails"></div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-4" id="actionButtons"></div>
+                </div>
+            </div>
+
+            <!-- Related Posts -->
+            <section class="mt-10">
+                <h2 class="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-accent rounded-full"></span>Related Opportunities
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="relatedPosts"></div>
+            </section>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-slate border-t border-white/5 mt-16">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html" class="text-xl font-black text-white">CS<span class="text-accent">POINT</span></a>
+            <p class="text-xs text-slate/60">© 2026 CSPOINT. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== UTILS =====
+        function escapeHTML(s) { if (!s) return ''; const d = document.createElement('div'); d.appendChild(document.createTextNode(String(s))); return d.innerHTML; }
+        function sanitizeUrl(u) { if (!u) return ''; try { const p = new URL(u, location.href); if (['http:', 'https:', 'mailto:'].includes(p.protocol)) return u.trim(); return ''; } catch { return u.startsWith('#') ? u : ''; } }
+
+        const catColors = { Internship: 'bg-emerald-100 text-emerald-800', Jobs: 'bg-blue-100 text-blue-800', Scholarship: 'bg-amber-100 text-amber-800', Hackathon: 'bg-rose-100 text-rose-800', Fellowship: 'bg-violet-100 text-violet-800', Workshop: 'bg-cyan-100 text-cyan-800', General: 'bg-gray-100 text-gray-800', Exams: 'bg-blue-100 text-blue-800', Notice: 'bg-gray-100 text-gray-800', Results: 'bg-amber-100 text-amber-800', Contest: 'bg-rose-100 text-rose-800' };
+        const catEmojis = { Internship: '💼', Jobs: '🏢', Scholarship: '🎓', Hackathon: '💻', Fellowship: '🔬', Workshop: '🛠️', General: '📋', Exams: '📝', Notice: '📌', Results: '📊', Contest: '🏆' };
+        const catGradients = { Internship: 'bg-gradient-to-br from-emerald-600 to-teal-700', Jobs: 'bg-gradient-to-br from-blue-600 to-indigo-700', Scholarship: 'bg-gradient-to-br from-amber-500 to-orange-600', Hackathon: 'bg-gradient-to-br from-rose-600 to-pink-700', Fellowship: 'bg-gradient-to-br from-violet-600 to-purple-700', Workshop: 'bg-gradient-to-br from-cyan-600 to-blue-700', General: 'bg-gradient-to-br from-gray-700 to-gray-800', Exams: 'bg-gradient-to-br from-blue-600 to-indigo-700', Notice: 'bg-gradient-to-br from-gray-600 to-gray-700', Results: 'bg-gradient-to-br from-amber-600 to-orange-700', Contest: 'bg-gradient-to-br from-rose-600 to-red-700' };
+
+        // ===== LOAD DATA =====
+        const data = JSON.parse(localStorage.getItem('cspoint_data')) || { updates: [] };
+        const params = new URLSearchParams(window.location.search);
+        const postId = parseInt(params.get('id'));
+
+        function renderPost() {
+            const post = data.updates.find(u => u.id === postId);
+            document.getElementById('loadingState').classList.add('hidden');
+
+            if (!post) {
+                document.getElementById('notFoundState').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('postArticle').classList.remove('hidden');
+            document.title = escapeHTML(post.title) + ' | CSPOINT';
+
+            // Breadcrumb
+            document.getElementById('breadcrumbCat').textContent = post.cat;
+            document.getElementById('breadcrumbTitle').textContent = post.title;
+
+            // Hero banner
+            const gradient = catGradients[post.cat] || catGradients.General;
+            document.getElementById('heroBanner').className = 'rounded-2xl overflow-hidden mb-8 p-8 md:p-12 text-white relative ' + gradient;
+            document.getElementById('postCatBadge').textContent = post.cat;
+            document.getElementById('postTitle').textContent = post.title;
+            document.getElementById('postAuthor').textContent = post.author || 'CSPOINT Team';
+
+            const postDate = new Date(post.date);
+            document.getElementById('postDate').textContent = postDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            const readTime = post.readTime || Math.max(1, Math.ceil((post.desc || '').split(' ').length / 50));
+            document.getElementById('postReadTime').textContent = readTime + ' min read';
+
+            // Description
+            document.getElementById('postDesc').textContent = post.desc || 'No description available for this opportunity.';
+
+            // Key Details
+            const details = document.getElementById('keyDetails');
+            const detailItems = [
+                { icon: '📂', label: 'Category', value: post.cat },
+                { icon: '📅', label: 'Posted', value: postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) },
+                { icon: '👤', label: 'Posted By', value: post.author || 'CSPOINT Team' },
+                { icon: '⏱️', label: 'Read Time', value: readTime + ' minute(s)' }
+            ];
+            details.innerHTML = detailItems.map(d => `
+        <div class="flex items-center gap-3 bg-white rounded-lg p-3 border border-gray-100">
+            <span class="text-xl">${d.icon}</span>
+            <div><p class="text-xs text-gray-400 font-medium">${escapeHTML(d.label)}</p><p class="text-sm font-bold text-gray-800">${escapeHTML(d.value)}</p></div>
+        </div>`).join('');
+
+            // Action Buttons
+            const btns = document.getElementById('actionButtons');
+            let btnHtml = '';
+            const sLink = sanitizeUrl(post.link);
+            const sReg = sanitizeUrl(post.regLink);
+            if (sReg) btnHtml += `<a href="${sReg}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-accent text-navy font-bold px-8 py-3.5 rounded-xl text-sm hover:bg-accentHover transition-all active:scale-95 shadow-lg shadow-accent/30"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Apply / Register Now</a>`;
+            if (sLink) btnHtml += `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border-2 border-navy text-navy font-bold px-8 py-3.5 rounded-xl text-sm hover:bg-navy hover:text-white transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>Visit Source</a>`;
+            if (!sReg && !sLink) btnHtml += `<span class="text-gray-400 text-sm italic">No external links available for this opportunity.</span>`;
+            btnHtml += `<a href="index.html" class="inline-flex items-center gap-2 bg-gray-100 text-gray-700 font-bold px-6 py-3.5 rounded-xl text-sm hover:bg-gray-200 transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Back to All</a>`;
+            btns.innerHTML = btnHtml;
+
+            // Related Posts (same category, exclude current)
+            const related = data.updates.filter(u => u.cat === post.cat && u.id !== post.id).slice(0, 3);
+            const relatedEl = document.getElementById('relatedPosts');
+            if (related.length === 0) {
+                relatedEl.innerHTML = '<p class="text-gray-400 text-sm col-span-full">No related opportunities found.</p>';
+            } else {
+                relatedEl.innerHTML = related.map(r => {
+                    const style = catColors[r.cat] || catColors.General;
+                    const emoji = catEmojis[r.cat] || '📋';
+                    return `<a href="post.html?id=${r.id}" class="bg-white rounded-xl border border-gray-100 overflow-hidden card-hover block group">
+                <div class="h-28 ${catGradients[r.cat] || catGradients.General} flex items-center justify-center text-4xl">${emoji}</div>
+                <div class="p-4">
+                    <span class="cat-badge ${style} inline-block mb-2">${escapeHTML(r.cat)}</span>
+                    <h3 class="font-bold text-gray-900 text-sm leading-snug group-hover:text-accent transition-colors" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHTML(r.title)}</h3>
+                    <p class="text-xs text-gray-400 mt-2">${new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                </div>
+            </a>`;
+                }).join('');
+            }
+        }
+
+        // Init after short delay to simulate loading
+        setTimeout(renderPost, 300);
+    </script>
+</body>
+
+</html>
