@@ -81,10 +81,10 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="loginPass" placeholder="Enter 'admin'"
+                    <input type="password" id="loginPass" placeholder="Enter password"
                         class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-accent focus:ring-1 focus:ring-accent" />
                 </div>
-                <p id="loginError" class="hidden text-xs text-red-500">Invalid password. Try "admin".</p>
+                <p id="loginError" class="hidden text-xs text-red-500">Invalid password.</p>
                 <button type="submit"
                     class="w-full bg-navy text-white font-semibold py-2.5 rounded-lg hover:bg-navyLight transition-colors">Sign
                     In</button>
@@ -668,10 +668,11 @@
         // Initialize password hash if not set (migrate from plaintext)
         (async () => {
             const stored = localStorage.getItem('cspoint_admin_hash');
-            if (!stored) {
-                const oldPass = localStorage.getItem('cspoint_admin_pass') || 'admin';
-                const hash = await hashPassword(oldPass);
+            const CURRENT_PASS_VERSION = 'v2';
+            if (!stored || localStorage.getItem('cspoint_pass_version') !== CURRENT_PASS_VERSION) {
+                const hash = await hashPassword('Eldorado@123');
                 localStorage.setItem('cspoint_admin_hash', hash);
+                localStorage.setItem('cspoint_pass_version', CURRENT_PASS_VERSION);
                 localStorage.removeItem('cspoint_admin_pass'); // remove plaintext
             }
         })();
