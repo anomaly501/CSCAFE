@@ -545,98 +545,22 @@
 
     <!-- ========== SCRIPTS ========== -->
     <script>
-        // ===== DATA =====
-        const DEFAULT_DATA = {
-            updates: [
-                { id: 1, title: 'IISc \u2013 CNI Summer Internships 2026', desc: 'Centre for Networked Intelligence at IISc Bangalore invites applications for summer research internship in AI, ML, networking.', cat: 'Internship', date: '2026-02-19', link: 'https://cni.iisc.ac.in/opportunities/research-intern/', regLink: 'https://cni.iisc.ac.in/opportunities/research-intern/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 2, title: 'IIT Kanpur: SURGE Summer Internships 2026', desc: 'Summer Undergraduate Research Grant for Excellence at IIT Kanpur. Open to UG students from all recognized institutions.', cat: 'Internship', date: '2026-02-19', link: 'https://surge.iitk.ac.in', regLink: 'https://surge.iitk.ac.in', author: 'CSPOINT Team', readTime: 3 },
-                { id: 3, title: 'IIT Jodhpur: SURAJ Summer Internships 2026', desc: 'Summer Undergraduate Research Award at Jodhpur. Research internship across engineering and science departments.', cat: 'Internship', date: '2026-02-19', link: 'https://www.iitj.ac.in/suraj/en/internship', regLink: 'https://www.iitj.ac.in/suraj/en/internship', author: 'CSPOINT Team', readTime: 3 },
-                { id: 4, title: 'CSIR-SERC: Summer Internships 2026', desc: 'CSIR Structural Engineering Research Centre Prof. G.S. Ramaswamy internship for UG and dual degree students.', cat: 'Internship', date: '2026-02-19', link: 'https://serc.res.in/professor-gs-ramaswamy-internship-undergraduate-dual-degree-students', regLink: 'https://serc.res.in/professor-gs-ramaswamy-internship-undergraduate-dual-degree-students', author: 'CSPOINT Team', readTime: 3 },
-                { id: 5, title: 'IISER Pune Summer Student Program 2026', desc: 'Summer Student Programme for UG students across science and engineering disciplines at IISER Pune.', cat: 'Internship', date: '2026-02-19', link: 'https://www.iiserpune.ac.in/announcements/48/summer-student-programme-2026', regLink: 'https://www.iiserpune.ac.in/announcements/48/summer-student-programme-2026', author: 'CSPOINT Team', readTime: 3 },
-                { id: 6, title: 'IIT Madras SRFP 2026 \u2014 Summer Fellowship', desc: 'IIT Madras Summer Research Fellowship Programme. Apply for research positions across all departments.', cat: 'Internship', date: '2026-02-19', link: 'https://ssp.iitm.ac.in/summer-fellowship-registration', regLink: 'https://ssp.iitm.ac.in/summer-fellowship-registration', author: 'CSPOINT Team', readTime: 3 },
-                { id: 7, title: 'IIT Mandi Summer Internship 2026', desc: 'IIT Mandi invites UG students for summer internship across various departments and research labs.', cat: 'Internship', date: '2026-02-19', link: 'https://academics.iitmandi.ac.in/internships', regLink: 'https://academics.iitmandi.ac.in/internships', author: 'CSPOINT Team', readTime: 2 },
-                { id: 8, title: 'IIT Gandhinagar SRIP 2026', desc: 'Summer Research Internship Programme at IIT Gandhinagar. Open to UG and PG students from recognized institutions.', cat: 'Internship', date: '2026-02-19', link: 'https://srip.iitgn.ac.in/info/', regLink: 'https://srip.iitgn.ac.in/info/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 9, title: 'ISRO VSSC Summer Internship 2026', desc: 'ISRO Vikram Sarabhai Space Centre summer internship for engineering and science students.', cat: 'Internship', date: '2026-02-18', link: 'https://vsscinternship.vssc.gov.in/HRDD_LOGIN/', regLink: 'https://vsscinternship.vssc.gov.in/HRDD_LOGIN/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 10, title: 'ISRO LPSC Summer Internships 2026', desc: 'ISRO Liquid Propulsion Systems Centre summer internship for UG/PG students in engineering.', cat: 'Internship', date: '2026-02-18', link: 'https://www.lpsc.gov.in/Internship.html', regLink: 'https://www.lpsc.gov.in/Internship.html', author: 'CSPOINT Team', readTime: 2 },
-                { id: 11, title: 'CSIR CSMCRI Summer Internships 2026', desc: 'Central Salt and Marine Chemicals Research Institute internship and training program.', cat: 'Internship', date: '2026-02-17', link: 'https://www.csmcri.res.in/internship-training-program', regLink: 'https://www.csmcri.res.in/internship-training-program', author: 'CSPOINT Team', readTime: 2 },
-                { id: 12, title: 'CSIR CFTRI Summer Internships 2026', desc: 'Central Food Technological Research Institute internship for food science students.', cat: 'Internship', date: '2026-02-17', link: 'https://cftri.res.in/internship', regLink: 'https://cftri.res.in/internship', author: 'CSPOINT Team', readTime: 2 },
-                { id: 13, title: 'National Institute of Oceanography Internships 2026', desc: 'NIO offers internship positions for students from science and engineering backgrounds.', cat: 'Internship', date: '2026-02-17', link: 'https://www.nio.res.in/human-resource/students/interns', regLink: 'https://www.nio.res.in/human-resource/students/interns', author: 'CSPOINT Team', readTime: 2 },
-                { id: 14, title: 'NITI Aayog Internships 2026', desc: 'NITI Aayog internship for students in policy research and governance.', cat: 'Internship', date: '2026-02-16', link: 'https://www.niti.gov.in/internship', regLink: 'https://www.niti.gov.in/internship', author: 'CSPOINT Team', readTime: 2 },
-                { id: 15, title: 'ISRO MCF Summer Internships 2026', desc: 'ISRO Master Control Facility summer internship. Satellite operations experience.', cat: 'Internship', date: '2026-02-16', link: 'https://www.mcf.gov.in/website/Internship', regLink: 'https://www.mcf.gov.in/website/Internship', author: 'CSPOINT Team', readTime: 2 },
-                { id: 16, title: 'Parimana Summer Internship 2026', desc: 'QMETtech Parimana summer internship in quantum computing and advanced technology.', cat: 'Internship', date: '2026-02-16', link: 'https://qmettech.com/parimana-summer-internship-program/', regLink: 'https://qmettech.com/parimana-summer-internship-program/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 17, title: 'Abhijit Sen Rural Internship 2026', desc: 'National Foundation for India rural internship for students in rural development.', cat: 'Internship', date: '2026-02-15', link: 'https://nfi.org.in/internship', regLink: 'https://nfi.org.in/internship', author: 'CSPOINT Team', readTime: 3 },
-                { id: 18, title: 'GIST GIP 2026 \u2014 South Korea (Fully Funded)', desc: 'Gwangju Institute of Science and Technology Global Internship. Stipend and accommodation provided.', cat: 'Internship', date: '2026-02-15', link: 'https://www.gist.ac.kr/ipa/html/sub03/030102.html', regLink: 'https://www.gist.ac.kr/ipa/html/sub03/030102.html', author: 'CSPOINT Team', readTime: 3 },
-                { id: 19, title: 'MBZUAI UGRIP 2026 \u2014 Abu Dhabi (Fully Funded)', desc: 'Mohamed bin Zayed University of AI UG Research Internship. Fully funded AI/ML research.', cat: 'Internship', date: '2026-02-15', link: 'https://mbzuai.ac.ae/ugrip/', regLink: 'https://mbzuai.ac.ae/ugrip/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 20, title: 'Asia Infrastructure Investment Bank Internship 2026', desc: 'AIIB internship for graduate students in economics, finance, and development.', cat: 'Internship', date: '2026-02-14', link: 'https://www.aiib.org/en/opportunities/career/job-vacancies/internship/index.html', regLink: 'https://www.aiib.org/en/opportunities/career/job-vacancies/internship/index.html', author: 'CSPOINT Team', readTime: 3 },
-                { id: 21, title: 'IISc Summer UG Research Internships 2026', desc: 'Summer research in quantum nanoelectronics and 2D materials at IISc Bangalore.', cat: 'Internship', date: '2026-02-14', link: 'https://physics.iisc.ac.in/~aveek_bid/summer-research-internships-in-quantum-nanoelectronics-2d-materials/', regLink: 'https://physics.iisc.ac.in/~aveek_bid/summer-research-internships-in-quantum-nanoelectronics-2d-materials/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 22, title: 'GRIPS 2026 \u2014 Zhejiang University, China', desc: 'Global Research Immersion Program at Zhejiang University for international UG students.', cat: 'Internship', date: '2026-02-14', link: 'http://grips.zju.edu.cn/', regLink: 'http://grips.zju.edu.cn/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 23, title: 'SuRF@inStem \u2014 Summer Research Fellowships 2026', desc: 'Institute for Stem Cell Science summer research fellowship for science UG students.', cat: 'Internship', date: '2026-02-13', link: 'https://surf.instem.res.in/', regLink: 'https://surf.instem.res.in/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 24, title: 'INSAIT SURF 2026 \u2014 Bulgaria (Fully Funded)', desc: 'INSAIT Institute for CS, AI summer UG research fellowship in Sofia, Bulgaria.', cat: 'Internship', date: '2026-02-13', link: 'https://insait.ai/surf/', regLink: 'https://insait.ai/surf/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 25, title: 'CSIR-CCMB Summer Internship 2026', desc: 'Centre for Cellular and Molecular Biology summer training for BSc/BTech students.', cat: 'Internship', date: '2026-02-13', link: 'https://www.ccmb.res.in/Academics/Training-Programs?rr=Summer-Training-Program', regLink: 'https://www.ccmb.res.in/Academics/Training-Programs?rr=Summer-Training-Program', author: 'CSPOINT Team', readTime: 2 },
-                { id: 26, title: 'NGSF Internship Program 2026', desc: 'National Genomics Services Facility internship in genomics and bioinformatics.', cat: 'Internship', date: '2026-02-12', link: 'https://ngsf.in/ngs-internship-program/', regLink: 'https://ngsf.in/ngs-internship-program/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 27, title: 'IITDM Kancheepuram Summer Internship (SIES) 2026', desc: 'IIITDM Kancheepuram summer internship for engineering students.', cat: 'Internship', date: '2026-02-12', link: 'https://admissions.iiitdm.ac.in/sies/', regLink: 'https://admissions.iiitdm.ac.in/sies/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 28, title: 'IIIT Delhi Summer Internships 2026', desc: 'IIIT Delhi summer internship in CS, ECE, and related fields.', cat: 'Internship', date: '2026-02-12', link: 'https://iiitd.ac.in/placement/summer-internships', regLink: 'https://iiitd.ac.in/placement/summer-internships', author: 'CSPOINT Team', readTime: 2 },
-                { id: 29, title: 'CSIR IMMT Summer Internships 2026', desc: 'Institute of Minerals and Materials Technology summer internship for materials science students.', cat: 'Internship', date: '2026-02-12', link: 'https://www.immt.res.in/', regLink: 'https://www.immt.res.in/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 30, title: 'SJTU Summer Research 2026 \u2014 Shanghai', desc: 'Shanghai Jiao Tong University summer research internship for international students.', cat: 'Internship', date: '2026-02-11', link: 'https://global.sjtu.edu.cn/', regLink: 'https://global.sjtu.edu.cn/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 31, title: 'Raman Research Institute VSP 2026', desc: 'Visiting Students Program for physics and astronomy students in Bangalore.', cat: 'Internship', date: '2026-02-11', link: 'https://www.rri.res.in/careers/visiting-students', regLink: 'https://www.rri.res.in/careers/visiting-students', author: 'CSPOINT Team', readTime: 2 },
-                { id: 32, title: 'CSIR-CSIO Summer Internship 2026', desc: 'Central Scientific Instruments Organisation internship in Chandigarh.', cat: 'Internship', date: '2026-02-11', link: 'https://www.csio.res.in/', regLink: 'https://www.csio.res.in/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 33, title: 'ISRO NESAC Summer Internship 2026', desc: 'North Eastern Space Applications Centre summer internship in remote sensing and GIS.', cat: 'Internship', date: '2026-02-10', link: 'https://nesac.gov.in/outreach/', regLink: 'https://nesac.gov.in/outreach/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 34, title: 'CSIR-CDRI Summer Internships 2026', desc: 'Central Drug Research Institute summer training for pharmacy and chemistry students.', cat: 'Internship', date: '2026-02-10', link: 'https://cdri.res.in/TrainingScholarshipAwardees', regLink: 'https://cdri.res.in/TrainingScholarshipAwardees', author: 'CSPOINT Team', readTime: 2 },
-                { id: 35, title: 'ISRO SDSC SHAR Summer Internship 2026', desc: 'Satish Dhawan Space Centre SHAR internship. Experience rocket launch technology.', cat: 'Internship', date: '2026-02-10', link: 'https://www.shar.gov.in/sdscshar/internship.jsp', regLink: 'https://www.shar.gov.in/sdscshar/internship.jsp', author: 'CSPOINT Team', readTime: 2 },
-                { id: 36, title: 'National Renewable Energy Internship 2026', desc: 'MNRE internship in renewable energy policy and research across India.', cat: 'Internship', date: '2026-02-09', link: 'https://mnre.gov.in/en/national-renewable-energy-internship-programme-2/', regLink: 'https://mnre.gov.in/en/national-renewable-energy-internship-programme-2/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 37, title: 'Land Ports Authority of India Internship 2026', desc: 'LPAI internship in international trade, logistics, and border infrastructure.', cat: 'Internship', date: '2026-02-09', link: 'https://lpai.gov.in/en/internship', regLink: 'https://lpai.gov.in/en/internship', author: 'CSPOINT Team', readTime: 2 },
-                { id: 38, title: 'Sanger Prize Competition 2026 \u2014 UK', desc: 'Wellcome Sanger Institute prize competition for early-career scientists in genomics.', cat: 'Internship', date: '2026-02-09', link: 'https://www.sanger.ac.uk/about/study/the-sanger-prize-competition-2026/', regLink: 'https://www.sanger.ac.uk/about/study/the-sanger-prize-competition-2026/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 39, title: 'KAUST Internship 2026 \u2014 Saudi Arabia (Fully Funded)', desc: 'King Abdullah University of Science and Technology fully funded STEM research internship.', cat: 'Internship', date: '2026-02-08', link: 'https://admissions.kaust.edu.sa/study/internships', regLink: 'https://admissions.kaust.edu.sa/study/internships', author: 'CSPOINT Team', readTime: 3 },
-                { id: 40, title: 'Coal India Limited Industrial Internship 2026', desc: 'Coal India industrial internship for engineering and management students.', cat: 'Internship', date: '2026-02-08', link: 'https://www.coalindia.in/career-cil/internship-opportunities-cil/', regLink: 'https://www.coalindia.in/career-cil/internship-opportunities-cil/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 41, title: 'GE Aerospace Internship 2026 \u2014 Mechanics Design', desc: 'GE Aerospace intern position in mechanics and design on aviation projects.', cat: 'Internship', date: '2026-02-08', link: 'https://careers.geaerospace.com/global/en/job/R5024439/Intern-Mechanics-Design', regLink: 'https://careers.geaerospace.com/global/en/job/R5024439/Intern-Mechanics-Design', author: 'CSPOINT Team', readTime: 2 },
-                { id: 42, title: 'Goldman Sachs Off-cycle Internships India 2026', desc: 'Goldman Sachs India off-cycle internship in technology, finance, and operations.', cat: 'Internship', date: '2026-02-07', link: 'https://higher.gs.com/roles/142331', regLink: 'https://higher.gs.com/roles/142331', author: 'CSPOINT Team', readTime: 3 },
-                { id: 43, title: 'Taiwan International Internship Program (TIIP) 2026', desc: 'Academia Sinica Taiwan international internship across scientific disciplines.', cat: 'Internship', date: '2026-02-07', link: 'https://tiip.dia.sinica.edu.tw/', regLink: 'https://tiip.dia.sinica.edu.tw/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 44, title: 'IRIS Summer Internship 2026 @ NUS Singapore', desc: 'National University of Singapore IRIS summer internship in engineering and science.', cat: 'Internship', date: '2026-02-07', link: 'https://nusgs.nus.edu.sg/irisnus/', regLink: 'https://nusgs.nus.edu.sg/irisnus/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 45, title: 'CERN Summer Studentship 2026 \u2014 Switzerland (Fully Funded)', desc: 'CERN summer student program for physics, engineering, CS students. Fully funded in Geneva.', cat: 'Internship', date: '2026-02-06', link: 'https://careers.cern/programmes/summer-studentship/', regLink: 'https://careers.cern/programmes/summer-studentship/', author: 'CSPOINT Team', readTime: 4 },
-                { id: 46, title: 'NHRC Summer Internships 2026', desc: 'National Human Rights Commission summer internship for law and social science students.', cat: 'Internship', date: '2026-02-06', link: 'https://nhrc.nic.in/training-programmes/internship-programmes', regLink: 'https://nhrc.nic.in/training-programmes/internship-programmes', author: 'CSPOINT Team', readTime: 2 },
-                { id: 47, title: 'DESY Summer Student Program 2026 \u2014 Germany (Fully Funded)', desc: 'Deutsches Elektronen-Synchrotron summer student program. Fully funded physics research.', cat: 'Internship', date: '2026-02-06', link: 'https://summerstudents.desy.de/application/', regLink: 'https://summerstudents.desy.de/application/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 48, title: 'CSIR-IICB Summer Internship 2026', desc: 'Indian Institute of Chemical Biology internship for chemistry, biology, and pharma students.', cat: 'Internship', date: '2026-02-05', link: 'https://www.iicb.res.in/internship', regLink: 'https://www.iicb.res.in/internship', author: 'CSPOINT Team', readTime: 2 },
-                { id: 49, title: 'ThinkSwiss Research Internships 2026 (Fully Funded)', desc: 'Swissnex India ThinkSwiss program. Research at Swiss universities with travel grant.', cat: 'Internship', date: '2026-02-05', link: 'https://swissnex.org/india/thinkswiss/', regLink: 'https://swissnex.org/india/thinkswiss/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 50, title: 'TIFR Hyderabad VSRP 2026', desc: 'TIFR Hyderabad Visiting Students Research Programme for physics/chemistry/biology students.', cat: 'Internship', date: '2026-02-05', link: 'https://www.tifrh.res.in/academics/vsrp/', regLink: 'https://www.tifrh.res.in/academics/vsrp/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 51, title: 'Aalto University Summer Program 2026 \u2014 Finland', desc: 'Aalto Science Institute international summer research programme in Helsinki.', cat: 'Internship', date: '2026-02-04', link: 'https://www.aalto.fi/en/open-positions/aalto-science-institute-asci-international-summer-research-programme-2026', regLink: 'https://www.aalto.fi/en/open-positions/aalto-science-institute-asci-international-summer-research-programme-2026', author: 'CSPOINT Team', readTime: 3 },
-                { id: 52, title: 'JNCASR Research Internships 2026 (SRFP)', desc: 'Jawaharlal Nehru Centre for Advanced Scientific Research summer fellowship.', cat: 'Internship', date: '2026-02-04', link: 'https://www.jncasr.ac.in/academic/fandeprogrammes/srfp', regLink: 'https://www.jncasr.ac.in/academic/fandeprogrammes/srfp', author: 'CSPOINT Team', readTime: 3 },
-                { id: 53, title: 'FOSSEE IIT Bombay Internship 2026', desc: 'Free and Open Source Software for Education internship at IIT Bombay.', cat: 'Internship', date: '2026-02-04', link: 'https://fossee.in/fossee-internships', regLink: 'https://fossee.in/fossee-internships', author: 'CSPOINT Team', readTime: 2 },
-                { id: 54, title: 'University of Hong Kong Summer Research 2026', desc: 'HKU Graduate School summer research programme for international UG students.', cat: 'Internship', date: '2026-02-03', link: 'https://gradsch.hku.hk/news_and_events/news_and_future_events/summer-research-programme-2026', regLink: 'https://gradsch.hku.hk/news_and_events/news_and_future_events/summer-research-programme-2026', author: 'CSPOINT Team', readTime: 3 },
-                { id: 55, title: 'HKUST Summer UG Research 2026 \u2014 Hong Kong', desc: 'Hong Kong University of Science and Technology summer UG research program.', cat: 'Internship', date: '2026-02-03', link: 'https://summercampus.hkust.edu.hk/summer-school-ug-application', regLink: 'https://summercampus.hkust.edu.hk/summer-school-ug-application', author: 'CSPOINT Team', readTime: 3 },
-                { id: 56, title: 'POSTECH Summer Internships 2026 \u2014 South Korea', desc: 'Pohang University of Science and Technology summer internship for international students.', cat: 'Internship', date: '2026-02-02', link: 'https://ajayzener.com/internships/postech-summer-internship-south-korea/', regLink: 'https://ajayzener.com/internships/postech-summer-internship-south-korea/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 57, title: 'NCRA TIFR \u2014 VSRP 2026 (Radio Astronomy)', desc: 'National Centre for Radio Astrophysics TIFR Visiting Students Research Programme.', cat: 'Internship', date: '2026-02-02', link: 'http://vsrp.ncra.tifr.res.in/', regLink: 'http://vsrp.ncra.tifr.res.in/', author: 'CSPOINT Team', readTime: 3 },
-                { id: 58, title: 'IIT Madras WSAI Summer Internships 2026', desc: 'Wadhwani School of Data Science and AI at IIT Madras. AI, ML, and data science.', cat: 'Internship', date: '2026-02-02', link: 'https://dsai.iitm.ac.in/', regLink: 'https://dsai.iitm.ac.in/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 59, title: 'DRDO-DIPR Internship 2026', desc: 'Defence Research and Development Organisation DIPR internship in defence technology.', cat: 'Internship', date: '2026-02-01', link: 'https://drdo.gov.in/', regLink: 'https://drdo.gov.in/', author: 'CSPOINT Team', readTime: 2 },
-                { id: 60, title: 'IPRG Summer Internship 2026', desc: 'Indian Policy Research Group internship in public policy and governance.', cat: 'Internship', date: '2026-02-01', link: 'https://www.iprg.site/internships/', regLink: 'https://www.iprg.site/internships/', author: 'CSPOINT Team', readTime: 2 }
-            ], deadlines: [
-                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon', link: '#' },
-                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open', link: '#' },
-                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow', link: '#' },
-                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open', link: '#' },
-                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out', link: '#' }
-            ], resources: [
-                { id: 1, name: 'Data Structures Notes', type: 'PDF', size: '2.4 MB' },
-                { id: 2, name: 'OS — Galvin 9th Ed', type: 'eBook', size: '15 MB' },
-                { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
-                { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
-            ], links: [
-                { id: 1, label: 'University Portal', url: '#', cat: 'Official', desc: 'Main university website' },
-                { id: 2, label: 'CSE Department', url: '#', cat: 'Academic', desc: 'Department homepage' },
-                { id: 3, label: 'Placement Cell', url: '#', cat: 'Career', desc: 'Training & placements' }
-            ]
-        };
+        // ===== API BASE URL =====
+        // TODO: Replace YOUR_RENDER_URL with your actual Render URL, e.g. 'https://cspoint-backend.onrender.com'
+        const API = 'http://localhost:3000/api';
 
-        const data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
-        if (!data.links) data.links = JSON.parse(JSON.stringify(DEFAULT_DATA.links));
-        // Force-refresh data when version changes (e.g. after bulk import)
-        const DATA_VERSION = 'v2';
-        if (localStorage.getItem('cspoint_data_v') !== DATA_VERSION) {
-            localStorage.setItem('cspoint_data', JSON.stringify(DEFAULT_DATA));
-            localStorage.setItem('cspoint_data_v', DATA_VERSION);
-            localStorage.setItem('cspoint_nextId', JSON.stringify({ updates: 61, deadlines: 6, resources: 5, links: 4 }));
-            location.reload();
+        // ===== DATA (loaded from PostgreSQL via API) =====
+        const data = { updates: [] };
+
+        async function loadData() {
+            try {
+                data.updates = await fetch(API + '/updates').then(r => r.json());
+                renderPosts();
+            } catch (err) {
+                console.error('Failed to load data:', err);
+                document.getElementById('postsList').innerHTML = '<p class="text-center text-red-400 py-8">⚠ Failed to connect to server. Make sure the server is running.</p>';
+            }
         }
-        if (!localStorage.getItem('cspoint_data')) { localStorage.setItem('cspoint_data', JSON.stringify(data)); localStorage.setItem('cspoint_nextId', JSON.stringify({ updates: 61, deadlines: 6, resources: 5, links: 4 })); }
 
         // ===== UTILS =====
         function escapeHTML(s) { if (!s) return ''; const d = document.createElement('div'); d.appendChild(document.createTextNode(String(s))); return d.innerHTML; }
@@ -654,7 +578,7 @@
             const q = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
             let filtered = data.updates.filter(u => {
                 const matchCat = cat === 'all' || u.cat === cat;
-                const matchQ = !q || u.title.toLowerCase().includes(q) || u.desc.toLowerCase().includes(q);
+                const matchQ = !q || u.title.toLowerCase().includes(q) || (u.desc || '').toLowerCase().includes(q);
                 return matchCat && matchQ;
             });
             const shown = filtered.slice(0, postsVisible);
@@ -714,8 +638,8 @@
         document.getElementById('filterCategory').addEventListener('change', () => { postsVisible = 6; renderPosts(); });
         document.getElementById('globalSearch').addEventListener('input', () => { postsVisible = 6; renderPosts(); });
 
-        // ===== INIT =====
-        renderPosts();
+        // ===== INIT — fetch from API =====
+        loadData();
     </script>
 </body>
 

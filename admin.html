@@ -533,47 +533,30 @@
     </div>
 
     <script>
-        // ===== DATA STORE (with localStorage persistence) =====
-        const DEFAULT_DATA = {
-            updates: [
-                { id: 1, title: 'End Semester Examination Schedule Released \u2014 Spring 2026', desc: 'Final schedule for the CSE department end-term exams has been published. Exams commence from May 15th, 2026.', cat: 'Exams', date: '2026-02-18', link: 'https://university.edu/exams/spring2026', regLink: '' },
-                { id: 2, title: 'Summer Research Internship at IIT Bombay \u2014 Applications Open', desc: 'Applications are invited for the Summer Research Fellowship Program 2026. Eligible for 3rd-year B.Tech students.', cat: 'Internship', date: '2026-02-17', link: 'https://iitb.ac.in/internship', regLink: 'https://iitb.ac.in/internship/apply' },
-                { id: 3, title: '3-Day Workshop on Generative AI & Large Language Models', desc: 'Hands-on workshop covering Transformers, PyTorch, and deploying LLMs. Registration closes Feb 25.', cat: 'Workshop', date: '2026-02-16', link: 'https://workshop.cse.edu/genai', regLink: 'https://workshop.cse.edu/genai/register' },
-                { id: 4, title: 'GATE 2026 Results Declared \u2014 Check Scorecard Now', desc: 'IIT Delhi has released the GATE 2026 results. Candidates can download their scorecard from the official portal.', cat: 'Results', date: '2026-02-15', link: 'https://gate2026.iitd.ac.in/results', regLink: '' },
-                { id: 5, title: 'Holiday Notice: University Closed for Maha Shivaratri', desc: 'All departments will remain closed on Feb 26 on account of Maha Shivaratri. Classes resume Feb 27.', cat: 'Notice', date: '2026-02-14', link: '', regLink: '' },
-                { id: 6, title: 'Google Code Jam 2026 \u2014 Qualification Round Registration Open', desc: 'Register for the qualification round. Open to all participants globally. Top scorers proceed to Round 1.', cat: 'Contest', date: '2026-02-13', link: 'https://codingcompetitions.withgoogle.com/codejam', regLink: 'https://codingcompetitions.withgoogle.com/codejam/register' },
-                { id: 7, title: 'Microsoft Engage 2026 \u2014 Mentorship Program Applications', desc: 'Microsoft India flagship mentorship and internship program for pre-final year students. Apply by March 10.', cat: 'Internship', date: '2026-02-12', link: 'https://microsoft.com/engage', regLink: 'https://microsoft.com/engage/apply' }
-            ],
-            deadlines: [
-                { id: 1, name: 'GATE 2027 Registration', date: '2026-03-30T23:59', status: 'Closing Soon', link: 'https://gate2027.iitm.ac.in/register' },
-                { id: 2, name: 'Google STEP Internship', date: '2026-04-15T23:59', status: 'Open', link: 'https://careers.google.com/students/step' },
-                { id: 3, name: 'Hack-All-Night Contest', date: '2026-02-20T18:00', status: 'Tomorrow', link: 'https://hackallnight.dev/register' },
-                { id: 4, name: 'MITACS Globalink Research', date: '2026-05-01T23:59', status: 'Open', link: 'https://mitacs.ca/globalink' },
-                { id: 5, name: 'JEE Advanced 2026', date: '2026-02-10T00:00', status: 'Results Out', link: 'https://jeeadv.ac.in/results' }
-            ],
-            resources: [
-                { id: 1, name: 'Data Structures Notes', type: 'PDF', size: '2.4 MB' },
-                { id: 2, name: 'OS \u2014 Galvin 9th Ed', type: 'eBook', size: '15 MB' },
-                { id: 3, name: 'Previous Year Papers (2025)', type: 'ZIP', size: '56 MB' },
-                { id: 4, name: 'Algorithm Cheat Sheet', type: 'PDF', size: '500 KB' }
-            ],
-            links: [
-                { id: 1, label: 'University Portal', url: 'https://university.edu', cat: 'Official', desc: 'Main university website' },
-                { id: 2, label: 'CSE Department', url: 'https://cse.university.edu', cat: 'Academic', desc: 'Department homepage' },
-                { id: 3, label: 'Placement Cell', url: 'https://placement.university.edu', cat: 'Career', desc: 'Training & placements' }
-            ]
-        };
+        // ===== API BASE URL =====
+        // TODO: Replace YOUR_RENDER_URL with your actual Render URL, e.g. 'https://cspoint-backend.onrender.com'
+        const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? `${window.location.origin}/api`
+            : 'YOUR_RENDER_URL/api'; // TODO: Replace with your Render URL for production
 
-        // Load from localStorage or use defaults
-        let data = JSON.parse(localStorage.getItem('cspoint_data')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
-        // Ensure links array exists for older localStorage data
-        if (!data.links) data.links = JSON.parse(JSON.stringify(DEFAULT_DATA.links));
-        let nextId = JSON.parse(localStorage.getItem('cspoint_nextId')) || { updates: 8, deadlines: 6, resources: 5, links: 4 };
-        if (!nextId.links) nextId.links = 4;
+        // ===== DATA STORE (loaded from PostgreSQL via API) =====
+        let data = { updates: [], deadlines: [], resources: [], links: [] };
 
-        function saveData() {
-            localStorage.setItem('cspoint_data', JSON.stringify(data));
-            localStorage.setItem('cspoint_nextId', JSON.stringify(nextId));
+        // ===== FETCH DATA FROM API =====
+        async function loadAllData() {
+            try {
+                const [updates, deadlines, resources, links] = await Promise.all([
+                    fetch(API + '/updates').then(r => r.json()),
+                    fetch(API + '/deadlines').then(r => r.json()),
+                    fetch(API + '/resources').then(r => r.json()),
+                    fetch(API + '/links').then(r => r.json()),
+                ]);
+                data = { updates, deadlines, resources, links };
+                renderAll();
+            } catch (err) {
+                console.error('Failed to load data:', err);
+                showToast('⚠ Failed to connect to server. Is it running?');
+            }
         }
 
         // ===== SECURITY UTILITIES =====
@@ -599,7 +582,6 @@
         }
 
         // ===== SECURE LOGIN (with rate limiting) =====
-        // Password hash (never stored in plaintext)
         const _H = '3pyjcidqcg';
         function _k(s) {
             let a = 0xdeadbeef, b = 0x41c6ce57;
@@ -654,7 +636,7 @@
                 document.getElementById('loginView').classList.add('hidden');
                 document.getElementById('dashView').classList.remove('hidden');
                 startSession();
-                renderAll();
+                loadAllData();
             } else {
                 loginAttempts++;
                 if (loginAttempts >= MAX_ATTEMPTS) {
@@ -666,7 +648,6 @@
                 errEl.classList.remove('hidden');
             }
         });
-
 
         function logout() {
             clearTimeout(sessionTimer);
@@ -733,7 +714,7 @@
             tb.innerHTML = data.deadlines.map(d => {
                 const sLink = sanitizeUrl(d.link); return `<tr>
         <td class="px-4 py-3 font-medium">${escapeHTML(d.name)}</td>
-        <td class="px-4 py-3 text-gray-500">${escapeHTML(d.date.replace('T', ' '))}</td>
+        <td class="px-4 py-3 text-gray-500">${escapeHTML((d.date || '').replace('T', ' '))}</td>
         <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${statusColors[d.status] || ''}">${escapeHTML(d.status)}</span></td>
         <td class="px-4 py-3">${sLink ? `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline text-xs">Register ↗</a>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
         <td class="px-4 py-3 text-right space-x-2">
@@ -783,15 +764,31 @@
             document.getElementById('statLinks').textContent = data.links.length;
         }
 
-        // ===== CRUD: UPDATES =====
-        document.getElementById('updateForm').addEventListener('submit', e => {
+        // ===== CRUD: UPDATES (via API) =====
+        document.getElementById('updateForm').addEventListener('submit', async e => {
             e.preventDefault();
             const editId = document.getElementById('updateEditId').value;
-            const item = { title: validateLength(document.getElementById('uTitle').value, 200), desc: validateLength(document.getElementById('uDesc').value, 1000), cat: validateLength(document.getElementById('uCat').value, 50), date: document.getElementById('uDate').value, link: sanitizeUrl(document.getElementById('uLink').value), regLink: sanitizeUrl(document.getElementById('uRegLink').value) };
-            if (editId) { const idx = data.updates.findIndex(u => u.id == editId); if (idx > -1) data.updates[idx] = { ...data.updates[idx], ...item }; showToast('Update edited successfully!'); }
-            else { item.id = nextId.updates++; data.updates.unshift(item); showToast('Update added successfully!'); }
-            saveData(); closeModal('update'); renderAll();
+            const item = {
+                title: validateLength(document.getElementById('uTitle').value, 200),
+                desc: validateLength(document.getElementById('uDesc').value, 1000),
+                cat: validateLength(document.getElementById('uCat').value, 50),
+                date: document.getElementById('uDate').value,
+                link: sanitizeUrl(document.getElementById('uLink').value),
+                regLink: sanitizeUrl(document.getElementById('uRegLink').value)
+            };
+            try {
+                if (editId) {
+                    await fetch(API + '/updates/' + editId, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Update edited successfully!');
+                } else {
+                    await fetch(API + '/updates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Update added successfully!');
+                }
+                closeModal('update');
+                await loadAllData();
+            } catch (err) { console.error(err); showToast('⚠ Error saving update.'); }
         });
+
         function editUpdate(id) {
             const u = data.updates.find(x => x.id === id); if (!u) return;
             document.getElementById('updateEditId').value = id;
@@ -805,15 +802,29 @@
             openModal('update');
         }
 
-        // ===== CRUD: DEADLINES =====
-        document.getElementById('deadlineForm').addEventListener('submit', e => {
+        // ===== CRUD: DEADLINES (via API) =====
+        document.getElementById('deadlineForm').addEventListener('submit', async e => {
             e.preventDefault();
             const editId = document.getElementById('deadlineEditId').value;
-            const item = { name: validateLength(document.getElementById('dName').value, 200), date: document.getElementById('dDate').value, status: validateLength(document.getElementById('dStatus').value, 50), link: sanitizeUrl(document.getElementById('dLink').value) };
-            if (editId) { const idx = data.deadlines.findIndex(d => d.id == editId); if (idx > -1) data.deadlines[idx] = { ...data.deadlines[idx], ...item }; showToast('Deadline edited!'); }
-            else { item.id = nextId.deadlines++; data.deadlines.unshift(item); showToast('Deadline added!'); }
-            saveData(); closeModal('deadline'); renderAll();
+            const item = {
+                name: validateLength(document.getElementById('dName').value, 200),
+                date: document.getElementById('dDate').value,
+                status: validateLength(document.getElementById('dStatus').value, 50),
+                link: sanitizeUrl(document.getElementById('dLink').value)
+            };
+            try {
+                if (editId) {
+                    await fetch(API + '/deadlines/' + editId, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Deadline edited!');
+                } else {
+                    await fetch(API + '/deadlines', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Deadline added!');
+                }
+                closeModal('deadline');
+                await loadAllData();
+            } catch (err) { console.error(err); showToast('⚠ Error saving deadline.'); }
         });
+
         function editDeadline(id) {
             const d = data.deadlines.find(x => x.id === id); if (!d) return;
             document.getElementById('deadlineEditId').value = id;
@@ -825,15 +836,28 @@
             openModal('deadline');
         }
 
-        // ===== CRUD: RESOURCES =====
-        document.getElementById('resourceForm').addEventListener('submit', e => {
+        // ===== CRUD: RESOURCES (via API) =====
+        document.getElementById('resourceForm').addEventListener('submit', async e => {
             e.preventDefault();
             const editId = document.getElementById('resourceEditId').value;
-            const item = { name: validateLength(document.getElementById('rName').value, 200), type: validateLength(document.getElementById('rType').value, 50), size: validateLength(document.getElementById('rSize').value, 50) };
-            if (editId) { const idx = data.resources.findIndex(r => r.id == editId); if (idx > -1) data.resources[idx] = { ...data.resources[idx], ...item }; showToast('Resource edited!'); }
-            else { item.id = nextId.resources++; data.resources.unshift(item); showToast('Resource added!'); }
-            saveData(); closeModal('resource'); renderAll();
+            const item = {
+                name: validateLength(document.getElementById('rName').value, 200),
+                type: validateLength(document.getElementById('rType').value, 50),
+                size: validateLength(document.getElementById('rSize').value, 50)
+            };
+            try {
+                if (editId) {
+                    await fetch(API + '/resources/' + editId, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Resource edited!');
+                } else {
+                    await fetch(API + '/resources', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Resource added!');
+                }
+                closeModal('resource');
+                await loadAllData();
+            } catch (err) { console.error(err); showToast('⚠ Error saving resource.'); }
         });
+
         function editResource(id) {
             const r = data.resources.find(x => x.id === id); if (!r) return;
             document.getElementById('resourceEditId').value = id;
@@ -844,15 +868,29 @@
             openModal('resource');
         }
 
-        // ===== CRUD: LINKS =====
-        document.getElementById('linkForm').addEventListener('submit', e => {
+        // ===== CRUD: LINKS (via API) =====
+        document.getElementById('linkForm').addEventListener('submit', async e => {
             e.preventDefault();
             const editId = document.getElementById('linkEditId').value;
-            const item = { label: validateLength(document.getElementById('lLabel').value, 200), url: sanitizeUrl(document.getElementById('lUrl').value), cat: validateLength(document.getElementById('lCat').value, 50), desc: validateLength(document.getElementById('lDesc').value, 500) };
-            if (editId) { const idx = data.links.findIndex(l => l.id == editId); if (idx > -1) data.links[idx] = { ...data.links[idx], ...item }; showToast('Link edited!'); }
-            else { item.id = nextId.links++; data.links.unshift(item); showToast('Link added!'); }
-            saveData(); closeModal('link'); renderAll();
+            const item = {
+                label: validateLength(document.getElementById('lLabel').value, 200),
+                url: sanitizeUrl(document.getElementById('lUrl').value),
+                cat: validateLength(document.getElementById('lCat').value, 50),
+                desc: validateLength(document.getElementById('lDesc').value, 500)
+            };
+            try {
+                if (editId) {
+                    await fetch(API + '/links/' + editId, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Link edited!');
+                } else {
+                    await fetch(API + '/links', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item) });
+                    showToast('Link added!');
+                }
+                closeModal('link');
+                await loadAllData();
+            } catch (err) { console.error(err); showToast('⚠ Error saving link.'); }
         });
+
         function editLink(id) {
             const l = data.links.find(x => x.id === id); if (!l) return;
             document.getElementById('linkEditId').value = id;
@@ -864,13 +902,14 @@
             openModal('link');
         }
 
-        // ===== DELETE =====
-        function deleteItem(type, id) {
+        // ===== DELETE (via API) =====
+        async function deleteItem(type, id) {
             if (!confirm('Are you sure you want to delete this item?')) return;
-            data[type] = data[type].filter(x => x.id !== id);
-            saveData();
-            showToast('Item deleted.');
-            renderAll();
+            try {
+                await fetch(API + '/' + type + '/' + id, { method: 'DELETE' });
+                showToast('Item deleted.');
+                await loadAllData();
+            } catch (err) { console.error(err); showToast('⚠ Error deleting item.'); }
         }
     </script>
 </body>
