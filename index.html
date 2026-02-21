@@ -546,9 +546,7 @@
     <!-- ========== SCRIPTS ========== -->
     <script>
         // ===== API BASE URL =====
-        const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? `${window.location.origin}/api`
-            : 'https://cscafe.onrender.com/api';
+        const API = '/api';
 
         // ===== DATA (loaded from PostgreSQL via API) =====
         const data = { updates: [] };
