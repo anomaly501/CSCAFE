@@ -189,8 +189,9 @@
         const catGradients = { Internship: 'bg-gradient-to-br from-emerald-600 to-teal-700', Jobs: 'bg-gradient-to-br from-blue-600 to-indigo-700', Scholarship: 'bg-gradient-to-br from-amber-500 to-orange-600', Hackathon: 'bg-gradient-to-br from-rose-600 to-pink-700', Fellowship: 'bg-gradient-to-br from-violet-600 to-purple-700', Workshop: 'bg-gradient-to-br from-cyan-600 to-blue-700', General: 'bg-gradient-to-br from-gray-700 to-gray-800', Exams: 'bg-gradient-to-br from-blue-600 to-indigo-700', Notice: 'bg-gradient-to-br from-gray-600 to-gray-700', Results: 'bg-gradient-to-br from-amber-600 to-orange-700', Contest: 'bg-gradient-to-br from-rose-600 to-red-700' };
 
         // ===== API BASE URL =====
-        // TODO: Replace YOUR_RENDER_URL with your actual Render URL, e.g. 'https://cspoint-backend.onrender.com'
-        const API = 'http://localhost:3000/api';
+        const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? `${window.location.origin}/api`
+            : 'https://cscafe.onrender.com/api';
 
         // ===== LOAD DATA FROM API =====
         const params = new URLSearchParams(window.location.search);

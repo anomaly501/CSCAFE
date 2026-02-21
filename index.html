@@ -546,8 +546,9 @@
     <!-- ========== SCRIPTS ========== -->
     <script>
         // ===== API BASE URL =====
-        // TODO: Replace YOUR_RENDER_URL with your actual Render URL, e.g. 'https://cspoint-backend.onrender.com'
-        const API = 'http://localhost:3000/api';
+        const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? `${window.location.origin}/api`
+            : 'https://cscafe.onrender.com/api';
 
         // ===== DATA (loaded from PostgreSQL via API) =====
         const data = { updates: [] };
