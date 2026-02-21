@@ -30,7 +30,8 @@ app.get('/api/updates', async (req, res) => {
         const rows = await queryAll(query, params);
         res.json(rows.map(r => ({
             id: r.id, title: r.title, desc: r.description, cat: r.category,
-            date: r.date, link: r.link, regLink: r.reg_link, author: r.author, readTime: r.read_time
+            date: r.date, link: r.link, regLink: r.reg_link, author: r.author,
+            readTime: r.read_time, tags: r.tags || ''
         })));
     } catch (err) { console.error(err); res.status(500).json({ error: 'Server error' }); }
 });
@@ -39,32 +40,44 @@ app.get('/api/updates/:id', async (req, res) => {
     try {
         const r = await queryOne('SELECT * FROM updates WHERE id = $1', [parseInt(req.params.id)]);
         if (!r) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: r.id, title: r.title, desc: r.description, cat: r.category, date: r.date, link: r.link, regLink: r.reg_link, author: r.author, readTime: r.read_time });
+        res.json({
+            id: r.id, title: r.title, desc: r.description, cat: r.category,
+            date: r.date, link: r.link, regLink: r.reg_link, author: r.author,
+            readTime: r.read_time, tags: r.tags || ''
+        });
     } catch (err) { console.error(err); res.status(500).json({ error: 'Server error' }); }
 });
 
 app.post('/api/updates', async (req, res) => {
     try {
-        const { title, desc, cat, date, link, regLink, author, readTime } = req.body;
+        const { title, desc, cat, date, link, regLink, author, readTime, tags } = req.body;
         const result = await runSQL(
-            'INSERT INTO updates (title,description,category,date,link,reg_link,author,read_time) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *',
-            [title, desc || '', cat, date, link || '', regLink || '', author || 'CSPOINT Team', readTime || 2]
+            'INSERT INTO updates (title,description,category,date,link,reg_link,author,read_time,tags) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
+            [title, desc || '', cat, date, link || '', regLink || '', author || 'CSPOINT Team', readTime || 2, tags || '']
         );
         const r = result.rows[0];
-        res.status(201).json({ id: r.id, title: r.title, desc: r.description, cat: r.category, date: r.date, link: r.link, regLink: r.reg_link, author: r.author, readTime: r.read_time });
+        res.status(201).json({
+            id: r.id, title: r.title, desc: r.description, cat: r.category,
+            date: r.date, link: r.link, regLink: r.reg_link, author: r.author,
+            readTime: r.read_time, tags: r.tags || ''
+        });
     } catch (err) { console.error(err); res.status(500).json({ error: 'Server error' }); }
 });
 
 app.put('/api/updates/:id', async (req, res) => {
     try {
-        const { title, desc, cat, date, link, regLink } = req.body;
+        const { title, desc, cat, date, link, regLink, tags } = req.body;
         const result = await runSQL(
-            'UPDATE updates SET title=$1,description=$2,category=$3,date=$4,link=$5,reg_link=$6 WHERE id=$7 RETURNING *',
-            [title, desc || '', cat, date, link || '', regLink || '', parseInt(req.params.id)]
+            'UPDATE updates SET title=$1,description=$2,category=$3,date=$4,link=$5,reg_link=$6,tags=$7 WHERE id=$8 RETURNING *',
+            [title, desc || '', cat, date, link || '', regLink || '', tags || '', parseInt(req.params.id)]
         );
         if (!result.rows[0]) return res.status(404).json({ error: 'Not found' });
         const r = result.rows[0];
-        res.json({ id: r.id, title: r.title, desc: r.description, cat: r.category, date: r.date, link: r.link, regLink: r.reg_link, author: r.author, readTime: r.read_time });
+        res.json({
+            id: r.id, title: r.title, desc: r.description, cat: r.category,
+            date: r.date, link: r.link, regLink: r.reg_link, author: r.author,
+            readTime: r.read_time, tags: r.tags || ''
+        });
     } catch (err) { console.error(err); res.status(500).json({ error: 'Server error' }); }
 });
 

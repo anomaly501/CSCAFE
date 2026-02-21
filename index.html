@@ -601,12 +601,16 @@
                         <span class="cat-badge ${style}">${escapeHTML(u.cat)}</span>
                         <span class="text-xs text-gray-400">${readTime} min read</span>
                     </div>
+                    <!-- Tags Area -->
+                    ${u.tags ? `<div class="flex flex-wrap gap-1 mb-2">
+                        ${u.tags.split(',').map(tag => `<span class="px-1.5 py-0.5 bg-gray-50 text-[10px] text-gray-400 border border-gray-100 rounded uppercase tracking-wider">${escapeHTML(tag.trim())}</span>`).join('')}
+                    </div>` : ''}
                     <h3 class="font-bold text-gray-900 leading-snug mb-2 line-clamp-2"><a href="${postUrl}" class="hover:text-accent transition-colors">${escapeHTML(u.title)}</a></h3>
                     <p class="text-sm text-gray-500 line-clamp-2 mb-3">${escapeHTML(u.desc)}</p>
                     <div class="flex items-center justify-between text-xs text-gray-400">
                         <div class="flex items-center gap-3">
                             <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${escapeHTML(author)}</span>
-                            <span>${dateLabel}</span>
+                            <span>Deadline: ${dateLabel}</span>
                         </div>
                         <a href="${postUrl}" class="text-accent font-bold hover:underline text-xs">Read More →</a>
                     </div>
