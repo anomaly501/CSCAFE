@@ -8,8 +8,8 @@
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="description"
-        content="CSPOINT — Ultimate destination for CSE students. Jobs, internships, scholarships, hackathons & more!" />
-    <title>CSPOINT | Ultimate Destination for CSE Opportunities</title>
+        content="cscafe — Ultimate destination for CSE students. Jobs, internships, scholarships, hackathons & more!" />
+    <title>cscafe | Ultimate Destination for CSE Opportunities</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
@@ -193,7 +193,7 @@
     <!-- ========== ANNOUNCEMENT BAR ========== -->
     <div
         class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white text-center py-2 px-4 text-sm font-medium">
-        <span>🎓 CSPOINT — Your one-stop portal for all CSE opportunities!</span>
+        <span>🎓 cscafe — Your one-stop portal for all CSE opportunities!</span>
         <a href="#newsletter" class="ml-2 underline font-bold hover:text-navy transition-colors">Subscribe Now →</a>
     </div>
 
@@ -202,7 +202,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="#" class="text-2xl font-black tracking-tight text-white">CS<span
-                        class="text-accent">POINT</span></a>
+                        class="text-accent">CAFE</span></a>
                 <!-- Desktop Nav -->
                 <nav class="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main">
                     <a href="#"
@@ -356,7 +356,7 @@
                             <div
                                 class="bg-gradient-to-r from-emerald-600 to-teal-600 p-8 md:p-12 flex items-center min-h-[200px] md:min-h-[280px]">
                                 <div>
-                                    <h3 class="text-xl md:text-2xl font-bold mb-2">⭐ Subscribe to CSPOINT</h3>
+                                    <h3 class="text-xl md:text-2xl font-bold mb-2">⭐ Subscribe to cscafe</h3>
                                     <p class="text-emerald-100 text-sm md:text-base mb-4">Get curated opportunities
                                         delivered to your inbox daily</p><a href="#newsletter"
                                         class="inline-block bg-white text-emerald-700 font-bold px-6 py-2.5 rounded-lg text-sm hover:bg-emerald-50 transition">Subscribe
@@ -411,7 +411,25 @@
                             <option value="Workshop">Workshops</option>
                             <option value="General">General</option>
                         </select>
+                        <select id="sortBy" aria-label="Sort opportunities"
+                            class="border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-600 focus:border-accent focus:ring-1 focus:ring-accent bg-white">
+                            <option value="latest">Latest Posted</option>
+                            <option value="deadline">Nearest Deadline</option>
+                            <option value="title">Alphabetical (A-Z)</option>
+                        </select>
                     </div>
+                </div>
+
+                <!-- Main Content Search Bar -->
+                <div class="mb-6 relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="contentSearch"
+                        placeholder="Search by title, institution, or keywords (e.g. 'ISRO', 'Stipend')..."
+                        class="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl shadow-sm focus:border-accent focus:ring-1 focus:ring-accent text-sm transition-all" />
                 </div>
                 <div class="space-y-4" id="postsList"></div>
                 <div class="text-center mt-8" id="loadMoreWrap">
@@ -486,7 +504,7 @@
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>contact@cspoint.com</p>
+                            </svg>contact@cscafe.com</p>
                     </div>
                 </div>
             </aside>
@@ -498,17 +516,17 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
                 <a href="#" class="text-2xl font-black text-white mb-3 block">CS<span
-                        class="text-accent">POINT</span></a>
+                        class="text-accent">CAFE</span></a>
                 <p class="text-sm leading-relaxed">Your ultimate destination for CSE opportunities. Stay updated. Stay
                     ahead.</p>
             </div>
             <div>
                 <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">For Submitting a Post</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="mailto:editor@cspoint.com"
-                            class="hover:text-accent transition-colors">editor@cspoint.com</a></li>
-                    <li><a href="mailto:contact@cspoint.com"
-                            class="hover:text-accent transition-colors">contact@cspoint.com</a></li>
+                    <li><a href="mailto:editor@cscafe.com"
+                            class="hover:text-accent transition-colors">editor@cscafe.com</a></li>
+                    <li><a href="mailto:contact@cscafe.com"
+                            class="hover:text-accent transition-colors">contact@cscafe.com</a></li>
                     <li class="text-xs text-slate/60 mt-2">Hours: 11 AM - 7 PM (Mon-Fri)</li>
                 </ul>
             </div>
@@ -538,8 +556,8 @@
             </div>
         </div>
         <div class="border-t border-white/5 py-6 text-center text-xs text-slate/60">
-            © 2026 CSPOINT. All rights reserved. | <a href="#" class="hover:text-accent">Privacy Policy</a> | <a
-                href="#" class="hover:text-accent">Terms of Service</a>
+            © 2026 cscafe. All rights reserved. | <a href="#" class="hover:text-accent">Privacy Policy</a> | <a href="#"
+                class="hover:text-accent">Terms of Service</a>
         </div>
     </footer>
 
@@ -574,12 +592,36 @@
         function renderPosts() {
             const c = document.getElementById('postsList');
             const cat = document.getElementById('filterCategory').value;
-            const q = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
+            const sortVal = document.getElementById('sortBy').value;
+            const qHeader = (document.getElementById('globalSearch').value || '').toLowerCase().trim();
+            const qContent = (document.getElementById('contentSearch').value || '').toLowerCase().trim();
+
             let filtered = data.updates.filter(u => {
                 const matchCat = cat === 'all' || u.cat === cat;
-                const matchQ = !q || u.title.toLowerCase().includes(q) || (u.desc || '').toLowerCase().includes(q);
+                const terms = [u.title, u.desc, u.tags, u.cat].join(' ').toLowerCase();
+                const matchQ = (!qHeader || terms.includes(qHeader)) && (!qContent || terms.includes(qContent));
                 return matchCat && matchQ;
             });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (sortVal === 'deadline') {
+                    const dA = new Date(a.date).getTime();
+                    const dB = new Date(b.date).getTime();
+                    // Put past deadlines at the bottom, future nearest at top
+                    const now = Date.now();
+                    const isPastA = dA < now;
+                    const isPastB = dB < now;
+                    if (isPastA !== isPastB) return isPastA ? 1 : -1;
+                    return dA - dB;
+                } else if (sortVal === 'title') {
+                    return a.title.localeCompare(b.title);
+                } else {
+                    // Latest Posted (ID based)
+                    return b.id - a.id;
+                }
+            });
+
             const shown = filtered.slice(0, postsVisible);
             document.getElementById('loadMoreWrap').style.display = filtered.length > postsVisible ? '' : 'none';
 
@@ -589,7 +631,7 @@
                 const daysSince = Math.floor((Date.now() - new Date(u.date).getTime()) / 864e5);
                 const dateLabel = daysSince === 0 ? 'Today' : daysSince === 1 ? 'Yesterday' : new Date(u.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const readTime = u.readTime || Math.max(1, Math.ceil((u.desc || '').split(' ').length / 50));
-                const author = u.author || 'CSPOINT Team';
+                const author = u.author || 'cscafe Team';
                 const sLink = sanitizeUrl(u.link);
                 const sReg = sanitizeUrl(u.regLink);
                 const postUrl = 'post.html?id=' + u.id;
@@ -639,7 +681,9 @@
 
         // ===== FILTER =====
         document.getElementById('filterCategory').addEventListener('change', () => { postsVisible = 6; renderPosts(); });
+        document.getElementById('sortBy').addEventListener('change', () => { postsVisible = 6; renderPosts(); });
         document.getElementById('globalSearch').addEventListener('input', () => { postsVisible = 6; renderPosts(); });
+        document.getElementById('contentSearch').addEventListener('input', () => { postsVisible = 6; renderPosts(); });
 
         // ===== INIT — fetch from API =====
         loadData();

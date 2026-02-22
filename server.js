@@ -53,7 +53,7 @@ app.post('/api/updates', async (req, res) => {
         const { title, desc, cat, date, link, regLink, author, readTime, tags } = req.body;
         const result = await runSQL(
             'INSERT INTO updates (title,description,category,date,link,reg_link,author,read_time,tags) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
-            [title, desc || '', cat, date, link || '', regLink || '', author || 'CSPOINT Team', readTime || 2, tags || '']
+            [title, desc || '', cat, date, link || '', regLink || '', author || 'cscafe Team', readTime || 2, tags || '']
         );
         const r = result.rows[0];
         res.status(201).json({
@@ -231,7 +231,7 @@ app.get('/api/stats', async (req, res) => {
 
 initDB().then(() => {
     app.listen(PORT, () => {
-        console.log(`\n  ✅  CSPOINT API running at http://localhost:${PORT}`);
+        console.log(`\n  ✅  cscafe API running at http://localhost:${PORT}`);
         console.log(`  📄  Open http://localhost:${PORT}/index.html in your browser\n`);
     });
 }).catch(err => {

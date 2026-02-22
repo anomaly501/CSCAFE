@@ -1,7 +1,7 @@
 {
-  "name": "cspoint-backend",
+  "name": "cscafe-backend",
   "version": "1.0.0",
-  "description": "CSPOINT Backend API with PostgreSQL",
+  "description": "cscafe Backend API with PostgreSQL",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

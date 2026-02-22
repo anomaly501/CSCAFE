@@ -7,8 +7,8 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="description" content="CSPOINT — Opportunity Details" />
-    <title>Loading... | CSPOINT</title>
+    <meta name="description" content="cscafe — Opportunity Details" />
+    <title>Loading... | cscafe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
@@ -53,7 +53,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="index.html" class="text-2xl font-black tracking-tight text-white">CS<span
-                        class="text-accent">POINT</span></a>
+                        class="text-accent">CAFE</span></a>
                 <nav class="hidden md:flex items-center space-x-1">
                     <a href="index.html"
                         class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">←
@@ -178,8 +178,8 @@
     <footer class="bg-navy text-slate border-t border-white/5 mt-16">
         <div
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <a href="index.html" class="text-xl font-black text-white">CS<span class="text-accent">POINT</span></a>
-            <p class="text-xs text-slate/60">© 2026 CSPOINT. All rights reserved.</p>
+            <a href="index.html" class="text-xl font-black text-white">CS<span class="text-accent">CAFE</span></a>
+            <p class="text-xs text-slate/60">© 2026 cscafe. All rights reserved.</p>
         </div>
     </footer>
 
@@ -207,7 +207,7 @@
 
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('postArticle').classList.remove('hidden');
-                document.title = escapeHTML(post.title) + ' | CSPOINT';
+                document.title = escapeHTML(post.title) + ' | cscafe';
 
                 // Breadcrumb
                 document.getElementById('breadcrumbCat').textContent = post.cat;
@@ -227,7 +227,7 @@
                 }
 
                 document.getElementById('postTitle').textContent = post.title;
-                document.getElementById('postAuthor').textContent = post.author || 'CSPOINT Team';
+                document.getElementById('postAuthor').textContent = post.author || 'cscafe Team';
 
                 const postDate = new Date(post.date);
                 document.getElementById('postDate').textContent = postDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -243,7 +243,7 @@
                 const detailItems = [
                     { icon: '📂', label: 'Category', value: post.cat },
                     { icon: '📅', label: 'Deadline', value: postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) },
-                    { icon: '👤', label: 'Posted By', value: post.author || 'CSPOINT Team' },
+                    { icon: '👤', label: 'Posted By', value: post.author || 'cscafe Team' },
                     { icon: '⏱️', label: 'Read Time', value: readTime + ' minute(s)' }
                 ];
                 details.innerHTML = detailItems.map(d => `
