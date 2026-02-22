@@ -1,3 +1,4 @@
 node_modules/
 cspoint.db
 .env
+admin.html
