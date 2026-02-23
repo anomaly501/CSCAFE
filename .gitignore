@@ -2,3 +2,6 @@ node_modules/
 cspoint.db
 .env
 admin.html
+update_deadlines.js
+generate_pdf.js
+extract_internships.js
