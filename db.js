@@ -53,11 +53,13 @@ async function initDB() {
         );
     `);
 
+    /* 
     // Seed if updates table is empty
     const { rows } = await pool.query('SELECT COUNT(*) AS c FROM updates');
     if (parseInt(rows[0].c) === 0) {
         await seedData();
     }
+    */
 }
 
 async function seedData() {
