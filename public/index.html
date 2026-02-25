@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="description"
         content="cscafe — Premium destination for CSE opportunities. Jobs, internships, scholarships, hackathons & more!" />
     <title>cscafe | Premium CSE Opportunities</title>
@@ -222,6 +225,23 @@
         let currentCategory = 'all';
         let sortOrder = 'latest';
 
+        // ===== SECURITY UTILITIES =====
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(String(str)));
+            return div.innerHTML;
+        }
+
+        function sanitizeUrl(url) {
+            if (!url) return '';
+            try {
+                const parsed = new URL(url.trim(), location.href);
+                if (['http:', 'https:', 'mailto:'].includes(parsed.protocol)) return url.trim();
+                return '';
+            } catch { return ''; }
+        }
+
         async function loadData() {
             try {
                 // Fetching from your existing backend API
@@ -311,19 +331,19 @@
                         <div class="card-logo text-5xl"><span>${emoji}</span></div>
                         <div class="flex-1 w-full">
                             <div class="mb-2">
-                                <h3 class="text-2xl font-black text-gray-800 tracking-tight">${u.title}</h3>
+                                <h3 class="text-2xl font-black text-gray-800 tracking-tight">${escapeHTML(u.title)}</h3>
                             </div>
-                            <p class="text-base text-gray-500 mb-6 leading-relaxed">${u.desc}</p>
+                            <p class="text-base text-gray-500 mb-6 leading-relaxed">${escapeHTML(u.desc)}</p>
                             
                             <div class="flex flex-wrap items-center gap-3">
                                 <div class="flex flex-wrap gap-2">
                                     ${tagList.map((tag, idx) => `
-                                        <span class="tag" style="background: ${getTagColor(idx)}; color: ${getTagTextColor(idx)};">${tag}</span>
+                                        <span class="tag" style="background: ${getTagColor(idx)}; color: ${getTagTextColor(idx)};">${escapeHTML(tag)}</span>
                                     `).join('')}
                                 </div>
                                 
                                 <div class="sm:ml-auto mt-4 sm:mt-0">
-                                    <a href="post.html?id=${u.id}" class="btn-apply inline-block">Apply By ${dateStr}</a>
+                                    <a href="post.html?id=${parseInt(u.id)}" class="btn-apply inline-block">Apply By ${escapeHTML(dateStr)}</a>
                                 </div>
                             </div>
                         </div>
