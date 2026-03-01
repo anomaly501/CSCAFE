@@ -20,6 +20,8 @@
             --glass-bg: rgba(255, 255, 255, 0.4);
             --glass-border: rgba(255, 255, 255, 0.6);
             --accent-red: #da5b4b;
+            --mouse-x: 50%;
+            --mouse-y: 50%;
         }
 
         * {
@@ -32,12 +34,14 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f0e9;
-            /* Parchment texture simulation */
+            /* Parchment texture simulation + interactive radial glow */
             background-image:
+                radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(218, 91, 75, 0.08) 0%, transparent 40%),
                 radial-gradient(#dcd8cf 1px, transparent 1px),
                 linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-            background-size: 40px 40px, 100px 100px, 100px 100px;
+            background-size: 100% 100%, 40px 40px, 100px 100px, 100px 100px;
+            background-attachment: fixed;
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -347,7 +351,7 @@
                 const postDate = new Date(u.date);
                 const isOver = postDate < new Date();
                 const btnText = isOver ? 'DEADLINE OVER' : `Apply By ${escapeHTML(dateStr)}`;
-                const btnClass = isOver ? 'bg-red-500 text-white pulse-deadline cursor-not-allowed opacity-90' : 'btn-apply';
+                const btnClass = isOver ? 'bg-red-500 text-white pulse-deadline cursor-not-allowed opacity-90 rounded-full' : 'btn-apply';
 
                 return `
                     <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8">
@@ -374,6 +378,14 @@
                 `;
             }).join('');
         }
+
+        // Mouse tracking for background
+        document.addEventListener('mousemove', e => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', x + '%');
+            document.documentElement.style.setProperty('--mouse-y', y + '%');
+        });
 
         // Initial load
         loadData();
