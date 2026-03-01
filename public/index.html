@@ -142,8 +142,8 @@
             text-transform: uppercase;
         }
 
-        .btn-apply {
-            background: var(--accent-red);
+        .btn-apply,
+        .btn-deadline {
             color: white;
             padding: 12px 28px;
             border-radius: 50px;
@@ -153,7 +153,17 @@
             white-space: nowrap;
         }
 
-        .btn-apply:hover {
+        .btn-apply {
+            background: var(--accent-red);
+        }
+
+        .btn-deadline {
+            background: #ef4444;
+            /* red-500 */
+        }
+
+        .btn-apply:hover,
+        .btn-deadline:hover {
             opacity: 0.9;
             transform: scale(1.02);
         }
@@ -351,7 +361,7 @@
                 const postDate = new Date(u.date);
                 const isOver = postDate < new Date();
                 const btnText = isOver ? 'DEADLINE OVER' : `Apply By ${escapeHTML(dateStr)}`;
-                const btnClass = isOver ? 'bg-red-500 text-white pulse-deadline cursor-not-allowed opacity-90 rounded-full' : 'btn-apply';
+                const btnClass = isOver ? 'btn-deadline pulse-deadline cursor-not-allowed opacity-90' : 'btn-apply';
 
                 return `
                     <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8">

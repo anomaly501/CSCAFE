@@ -16,6 +16,11 @@
         tailwind.config = { theme: { extend: { colors: { navy: '#0a1628', navyLight: '#12213a', navyMid: '#1a2d4a', slate: '#8892b0', lightSlate: '#a8b2d1', lightest: '#ccd6f6', accent: '#f59e0b', accentHover: '#d97706', electric: '#3b82f6', surface: '#f8fafc', surfaceAlt: '#f1f5f9' }, fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } } }
     </script>
     <style>
+        :root {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+        }
+
         * {
             scroll-behavior: smooth;
             box-sizing: border-box
@@ -23,7 +28,9 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f8fafc
+            background-color: #f8fafc;
+            background-image: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
         }
 
         .cat-badge {
@@ -286,8 +293,8 @@
                 if (isOver) {
                     btnHtml += `<span class="inline-flex items-center gap-2 bg-red-500 text-white font-bold px-8 py-3.5 rounded-full text-sm cursor-not-allowed shadow-lg pulse-deadline"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>DEADLINE OVER</span>`;
                 } else {
-                    if (sReg) btnHtml += `<a href="${sReg}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-accent text-navy font-bold px-8 py-3.5 rounded-xl text-sm hover:bg-accentHover transition-all active:scale-95 shadow-lg shadow-accent/30"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Apply / Register Now</a>`;
-                    if (sLink) btnHtml += `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border-2 border-navy text-navy font-bold px-8 py-3.5 rounded-xl text-sm hover:bg-navy hover:text-white transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>Visit Source</a>`;
+                    if (sReg) btnHtml += `<a href="${sReg}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-accent text-navy font-bold px-8 py-3.5 rounded-full text-sm hover:bg-accentHover transition-all active:scale-95 shadow-lg shadow-accent/30"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Apply / Register Now</a>`;
+                    if (sLink) btnHtml += `<a href="${sLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border-2 border-navy text-navy font-bold px-8 py-3.5 rounded-full text-sm hover:bg-navy hover:text-white transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>Visit Source</a>`;
                     if (!sReg && !sLink) btnHtml += `<span class="text-gray-400 text-sm italic">No external links available for this opportunity.</span>`;
                 }
                 btnHtml += `<a href="index.html" class="inline-flex items-center gap-2 bg-gray-100 text-gray-700 font-bold px-6 py-3.5 rounded-xl text-sm hover:bg-gray-200 transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Back to All</a>`;
@@ -320,6 +327,14 @@
                 document.getElementById('notFoundState').classList.remove('hidden');
             }
         }
+
+        // Mouse tracking for background
+        document.addEventListener('mousemove', e => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', x + '%');
+            document.documentElement.style.setProperty('--mouse-y', y + '%');
+        });
 
         // Init
         renderPost();
