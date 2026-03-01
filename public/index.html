@@ -160,6 +160,24 @@
             align-items: center;
             justify-content: center;
         }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+
+        .pulse-deadline {
+            animation: pulse-red 2s infinite;
+        }
     </style>
 </head>
 
@@ -329,7 +347,7 @@
                 const postDate = new Date(u.date);
                 const isOver = postDate < new Date();
                 const btnText = isOver ? 'DEADLINE OVER' : `Apply By ${escapeHTML(dateStr)}`;
-                const btnClass = isOver ? 'bg-gray-400 cursor-not-allowed opacity-70' : 'btn-apply';
+                const btnClass = isOver ? 'bg-red-500 text-white pulse-deadline cursor-not-allowed opacity-90' : 'btn-apply';
 
                 return `
                     <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8">
