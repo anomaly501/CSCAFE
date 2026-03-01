@@ -1,6 +1,6 @@
 # ☕ cscafe
 
-A curated platform for CSE students to discover opportunities — internships, jobs, scholarships, hackathons, and more.
+cscafe is a lightweight, full-stack web app built for CSE students to browse and discover curated opportunities like internships, jobs, scholarships, hackathons, fellowships, and workshops — all in one place. It features a clean, responsive frontend, a secure Express.js API backed by PostgreSQL (Neon), and an admin dashboard for managing listings with API key authentication, rate limiting, and XSS protection built in.
 
 ## Tech Stack
 
