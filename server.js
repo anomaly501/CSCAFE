@@ -14,7 +14,15 @@ const PORT = process.env.PORT || 3000;
 
 // Helmet — sets many secure HTTP headers automatically
 app.use(helmet({
-    contentSecurityPolicy: false, // Disabled to allow CDN scripts (Tailwind, fonts)
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "cdn.tailwindcss.com"],
+            "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+            "font-src": ["'self'", "fonts.gstatic.com"],
+            "img-src": ["'self'", "data:", "blob:"],
+        },
+    },
     crossOriginEmbedderPolicy: false,
 }));
 

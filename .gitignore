@@ -5,3 +5,4 @@ admin.html
 update_deadlines.js
 generate_pdf.js
 extract_internships.js
+admin.js
