@@ -1,5 +1,5 @@
-// bg.js - Interactive Canvas Particle Background
-// Creates a stunning constellation effect that responds to light/dark mode and mouse movement.
+// bg.js - CS-Themed Interactive Canvas Background
+// Creates a stunning technical constellation effect with code symbols that responds to light/dark mode and mouse movement.
 
 (function () {
     const canvas = document.createElement('canvas');
@@ -38,17 +38,21 @@
     });
 
     // Particle Configuration
-    const particleCount = Math.min(Math.floor((window.innerWidth * window.innerHeight) / 15000), 100);
-    const connectionDistance = 150;
+    const particleCount = Math.min(Math.floor((window.innerWidth * window.innerHeight) / 18000), 80);
+    const connectionDistance = 160;
+
+    // CS-related symbols
+    const chars = ['0', '1', '{', '}', '<', '>', '/', ';', '=>', '[]', '()', '&&', '||', '!=', '==', 'λ', 'if', 'for', '{}', '() =>'];
 
     class Particle {
         constructor() {
             this.x = Math.random() * width;
             this.y = Math.random() * height;
             // Slow, premium drifting movement
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.size = Math.random() * 2 + 1;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.char = chars[Math.floor(Math.random() * chars.length)];
+            this.fontSize = Math.random() * 8 + 12; // 12 to 20px
         }
 
         update() {
@@ -77,10 +81,11 @@
 
         draw() {
             const isDark = document.documentElement.classList.contains('dark');
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.font = `${this.fontSize}px 'Courier New', monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
             ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(56, 189, 248, 0.6)';
-            ctx.fill();
+            ctx.fillText(this.char, this.x, this.y);
         }
     }
 
@@ -112,11 +117,12 @@
                     // Opacity fades out as distance increases
                     let opacity = 1 - (distance / connectionDistance);
                     // Base opacity scaling
-                    opacity *= 0.3;
+                    opacity *= 0.25;
 
                     ctx.beginPath();
                     ctx.strokeStyle = `rgba(${lineColor}, ${opacity})`;
                     ctx.lineWidth = 1;
+                    // Offset drawing line slightly so it seems to connect to bounding box or just center
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
                     ctx.stroke();
