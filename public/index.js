@@ -1,3 +1,36 @@
+// Tailwind Configuration
+if (window.tailwind) {
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    navy: '#0b1a2e',
+                    navyLight: '#112240',
+                    accent: '#38bdf8'
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    serif: ['Playfair Display', 'serif']
+                }
+            }
+        }
+    };
+}
+
+// Dark Mode Logic
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true' ||
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isDark) document.documentElement.classList.add('dark');
+}
+
+function toggleDarkMode() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('darkMode', isDark);
+}
+initDarkMode();
+
 const API = '/api';
 let data = { updates: [] };
 let currentCategory = 'all';
@@ -110,13 +143,13 @@ function renderPosts() {
         const btnClass = isOver ? 'btn-deadline pulse-deadline cursor-not-allowed opacity-90' : 'btn-apply';
 
         return `
-            <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8">
+            <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8 dark:bg-white/5 dark:border-white/10">
                 <div class="card-logo text-5xl"><span>${emoji}</span></div>
                 <div class="flex-1 w-full">
                     <div class="mb-2">
-                        <h3 class="text-2xl font-black text-gray-800 tracking-tight">${escapeHTML(u.title)}</h3>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-white tracking-tight">${escapeHTML(u.title)}</h3>
                     </div>
-                    <p class="text-base text-gray-500 mb-6 leading-relaxed">${escapeHTML(u.desc)}</p>
+                    <p class="text-base text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">${escapeHTML(u.desc)}</p>
                     
                     <div class="flex flex-wrap items-center gap-3">
                         <div class="flex flex-wrap gap-2">
@@ -150,3 +183,10 @@ loadData();
 window.setCategory = setCategory;
 window.toggleSort = toggleSort;
 window.renderPosts = renderPosts;
+window.toggleDarkMode = toggleDarkMode;
+
+// Dark Mode Toggle Logic (CSP Compatible)
+document.addEventListener('DOMContentLoaded', () => {
+    const darkBtn = document.getElementById('darkModeToggle');
+    if (darkBtn) darkBtn.addEventListener('click', toggleDarkMode);
+});

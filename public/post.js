@@ -1,6 +1,7 @@
 // Tailwind Configuration
 if (window.tailwind) {
     tailwind.config = {
+        darkMode: 'class',
         theme: {
             extend: {
                 colors: {
@@ -23,6 +24,19 @@ if (window.tailwind) {
         }
     };
 }
+
+// Dark Mode Logic
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true' ||
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isDark) document.documentElement.classList.add('dark');
+}
+
+function toggleDarkMode() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('darkMode', isDark);
+}
+initDarkMode();
 
 // ===== UTILS =====
 function escapeHTML(s) {
@@ -161,9 +175,9 @@ async function renderPost() {
         }
         ];
         details.innerHTML = detailItems.map(d => `
-            <div class="flex items-center gap-3 bg-white rounded-lg p-3 border border-gray-100">
+            <div class="flex items-center gap-3 bg-white dark:bg-white/5 rounded-lg p-3 border border-gray-100 dark:border-white/10 transition-colors">
                 <span class="text-xl">${d.icon}</span>
-                <div><p class="text-xs text-gray-400 font-medium">${escapeHTML(d.label)}</p><p class="text-sm font-bold text-gray-800">${escapeHTML(d.value)}</p></div>
+                <div><p class="text-xs text-gray-400 font-medium">${escapeHTML(d.label)}</p><p class="text-sm font-bold text-gray-800 dark:text-gray-200">${escapeHTML(d.value)}</p></div>
             </div>`).join('');
 
         // Action Buttons
@@ -194,11 +208,11 @@ async function renderPost() {
             relatedEl.innerHTML = related.map(r => {
                 const style = catColors[r.cat] || catColors.General;
                 const emoji = catEmojis[r.cat] || '📋';
-                return `<a href="post.html?id=${r.id}" class="bg-white rounded-xl border border-gray-100 overflow-hidden card-hover block group">
+                return `<a href="post.html?id=${r.id}" class="bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/10 overflow-hidden card-hover block group transition-colors">
                     <div class="h-28 ${catGradients[r.cat] || catGradients.General} flex items-center justify-center text-4xl">${emoji}</div>
                     <div class="p-4">
                         <span class="cat-badge ${style} inline-block mb-2">${escapeHTML(r.cat)}</span>
-                        <h3 class="font-bold text-gray-900 text-sm leading-snug group-hover:text-accent transition-colors" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHTML(r.title)}</h3>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-sm leading-snug group-hover:text-accent transition-colors" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHTML(r.title)}</h3>
                         <p class="text-xs text-gray-400 mt-2">${new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                     </div>
                 </a>`;
@@ -221,3 +235,9 @@ document.addEventListener('mousemove', e => {
 
 // Init
 renderPost();
+
+// Dark Mode Toggle Logic (CSP Compatible)
+document.addEventListener('DOMContentLoaded', () => {
+    const darkBtn = document.getElementById('darkModeToggle');
+    if (darkBtn) darkBtn.addEventListener('click', toggleDarkMode);
+});

@@ -65,10 +65,41 @@
         .pulse-deadline {
             animation: pulse-red 2s infinite;
         }
+
+        /* Night Mode Overrides */
+        .dark body {
+            background-color: #0b1a2e;
+            background-image: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(56, 189, 248, 0.1) 0%, transparent 40%);
+            color: #f1f5f9;
+        }
+
+        .dark .bg-white {
+            background-color: rgba(17, 34, 64, 0.6) !important;
+        }
+
+        .dark .border-gray-100 {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark .text-gray-900 {
+            color: white !important;
+        }
+
+        .dark .text-gray-800 {
+            color: #f1f5f9 !important;
+        }
+
+        .dark .text-gray-700 {
+            color: #ccd6f6 !important;
+        }
+
+        .dark .text-gray-500 {
+            color: #8892b0 !important;
+        }
     </style>
 </head>
 
-<body class="antialiased">
+<body class="antialiased transition-colors duration-300">
 
     <!-- Header -->
     <header class="bg-navy sticky top-0 z-50 shadow-xl shadow-navy/30">
@@ -80,8 +111,21 @@
                             class="text-accent">CAFE</span></span>
                 </a>
                 <nav class="hidden md:flex items-center space-x-1">
+                    <button id="darkModeToggle"
+                        class="p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center mr-2"
+                        title="Toggle Night Mode">
+                        <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg class="w-5 h-5 hidden dark:block text-yellow-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
                     <a href="index.html"
-                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">←
+                        class="px-3 py-2 text-sm font-semibold text-lightest hover:text-white transition-colors rounded-md">←
                         Back to Home</a>
                     <a href="index.html"
                         class="px-3 py-2 text-sm font-semibold text-lightest hover:text-accent transition-colors rounded-md">Internships</a>
