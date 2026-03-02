@@ -106,28 +106,6 @@
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
-
-            // Connect lines
-            for (let j = i; j < particles.length; j++) {
-                let dx = particles[i].x - particles[j].x;
-                let dy = particles[i].y - particles[j].y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < connectionDistance) {
-                    // Opacity fades out as distance increases
-                    let opacity = 1 - (distance / connectionDistance);
-                    // Base opacity scaling
-                    opacity *= 0.25;
-
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(${lineColor}, ${opacity})`;
-                    ctx.lineWidth = 1;
-                    // Offset drawing line slightly so it seems to connect to bounding box or just center
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
         }
     }
 
