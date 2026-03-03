@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -83,6 +84,8 @@ function requireAuth(req, res, next) {
     }
     next();
 }
+
+app.get('/api/verify-auth', requireAuth, (req, res) => res.json({ valid: true }));
 
 // ===================================================================
 //  INPUT VALIDATION HELPERS
