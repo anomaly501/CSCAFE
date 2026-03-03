@@ -74,8 +74,7 @@ function setCategory(cat) {
     currentCategory = cat;
     document.querySelectorAll('.filter-pill').forEach(el => {
         el.classList.remove('active');
-        // Check if the pill's onclick contains the specific category
-        if (el.getAttribute('onclick').includes(`'${cat}'`)) {
+        if (el.getAttribute('data-category') === cat) {
             el.classList.add('active');
         }
     });
@@ -159,7 +158,10 @@ function renderPosts() {
                         </div>
                         
                         <div class="sm:ml-auto mt-4 sm:mt-0">
-                            <a href="${isOver ? '#' : `post.html?id=${parseInt(u.id)}`}" class="${btnClass} inline-block" ${isOver ? 'onclick="return false;"' : ''}>${btnText}</a>
+                            ${isOver
+                ? `<span class="${btnClass} inline-block">${btnText}</span>`
+                : `<a href="post.html?id=${parseInt(u.id)}" class="${btnClass} inline-block">${btnText}</a>`
+            }
                         </div>
                     </div>
                 </div>
@@ -185,8 +187,21 @@ window.toggleSort = toggleSort;
 window.renderPosts = renderPosts;
 window.toggleDarkMode = toggleDarkMode;
 
-// Dark Mode Toggle Logic (CSP Compatible)
+// Event Listeners (CSP Compatible)
 document.addEventListener('DOMContentLoaded', () => {
     const darkBtn = document.getElementById('darkModeToggle');
     if (darkBtn) darkBtn.addEventListener('click', toggleDarkMode);
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', renderPosts);
+
+    const sortBtn = document.getElementById('sortBtn');
+    if (sortBtn) sortBtn.addEventListener('click', toggleSort);
+
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            const cat = e.currentTarget.getAttribute('data-category');
+            if (cat) setCategory(cat);
+        });
+    });
 });
