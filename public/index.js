@@ -93,6 +93,24 @@ function getCategoryEmoji(cat) {
     return catEmojis[cat] || '📋';
 }
 
+function getLogo(title) {
+    const t = (title || '').toLowerCase();
+    if (t.includes('iisc')) return 'logos/iisc.png';
+    if (t.includes('iit kanpur')) return 'logos/iitk.png';
+    if (t.includes('iit jodhpur')) return 'logos/iitj.png';
+    if (t.includes('serc')) return 'logos/serc.png';
+    if (t.includes('iiser pune')) return 'logos/iiserpune.png';
+    if (t.includes('iit madras')) return 'logos/iitm.png';
+    if (t.includes('iit mandi')) return 'logos/iitmandi.png';
+    if (t.includes('iit gandhinagar')) return 'logos/iitgn.png';
+    if (t.includes('vssc')) return 'logos/vssc.png';
+    if (t.includes('lpsc')) return 'logos/lpsc.png';
+    if (t.includes('google')) return 'logos/google.png';
+    if (t.includes('microsoft')) return 'logos/microsoft.png';
+    if (t.includes('university') || t.includes('exam')) return 'logos/university.png';
+    return null;
+}
+
 function getTagColor(idx) {
     const colors = ['#fef2f2', '#f0fdf4', '#eff6ff', '#fefce8', '#faf5ff'];
     return colors[idx % colors.length];
@@ -134,7 +152,11 @@ function renderPosts() {
         } catch (e) { }
 
         const tagList = u.tags ? u.tags.split(',').map(t => t.trim()) : [];
+        const logoPath = getLogo(u.title);
         const emoji = getCategoryEmoji(u.cat);
+        const iconHtml = logoPath
+            ? `<img src="${logoPath}" alt="logo" class="w-full h-full object-contain p-2 hover:scale-105 transition-transform" />`
+            : `<span>${emoji}</span>`;
 
         const postDate = new Date(u.date);
         const isOver = postDate < new Date();
@@ -142,8 +164,8 @@ function renderPosts() {
         const btnClass = isOver ? 'btn-deadline pulse-deadline cursor-not-allowed opacity-90' : 'btn-apply';
 
         return `
-            <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8 dark:bg-white/5 dark:border-white/10">
-                <div class="card-logo text-5xl"><span>${emoji}</span></div>
+            <div class="glass card flex flex-col sm:flex-row items-start sm:items-center gap-8 dark:bg-white/5 dark:border-white/10 overflow-hidden relative">
+                <div class="card-logo text-5xl bg-white/60 dark:bg-black/20 flex items-center justify-center overflow-hidden border border-white/50 shadow-sm">${iconHtml}</div>
                 <div class="flex-1 w-full">
                     <div class="mb-2">
                         <h3 class="text-2xl font-black text-gray-800 dark:text-white tracking-tight">${escapeHTML(u.title)}</h3>

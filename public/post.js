@@ -83,6 +83,24 @@ const catEmojis = {
     Results: '📊',
     Contest: '🏆'
 };
+
+function getLogo(title) {
+    const t = (title || '').toLowerCase();
+    if (t.includes('iisc')) return 'logos/iisc.png';
+    if (t.includes('iit kanpur')) return 'logos/iitk.png';
+    if (t.includes('iit jodhpur')) return 'logos/iitj.png';
+    if (t.includes('serc')) return 'logos/serc.png';
+    if (t.includes('iiser pune')) return 'logos/iiserpune.png';
+    if (t.includes('iit madras')) return 'logos/iitm.png';
+    if (t.includes('iit mandi')) return 'logos/iitmandi.png';
+    if (t.includes('iit gandhinagar')) return 'logos/iitgn.png';
+    if (t.includes('vssc')) return 'logos/vssc.png';
+    if (t.includes('lpsc')) return 'logos/lpsc.png';
+    if (t.includes('google')) return 'logos/google.png';
+    if (t.includes('microsoft')) return 'logos/microsoft.png';
+    if (t.includes('university') || t.includes('exam')) return 'logos/university.png';
+    return null;
+}
 const catGradients = {
     Internship: 'bg-gradient-to-br from-emerald-600 to-teal-700',
     Jobs: 'bg-gradient-to-br from-blue-600 to-indigo-700',
@@ -208,8 +226,13 @@ async function renderPost() {
             relatedEl.innerHTML = related.map(r => {
                 const style = catColors[r.cat] || catColors.General;
                 const emoji = catEmojis[r.cat] || '📋';
+                const logoPath = getLogo(r.title);
+                const iconHtml = logoPath
+                    ? `<img src="${logoPath}" alt="logo" class="w-16 h-16 object-contain drop-shadow-md bg-white p-2 rounded-xl hover:scale-105 transition-transform" />`
+                    : `<span>${emoji}</span>`;
+
                 return `<a href="post.html?id=${r.id}" class="bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/10 overflow-hidden card-hover block group transition-colors">
-                    <div class="h-28 ${catGradients[r.cat] || catGradients.General} flex items-center justify-center text-4xl">${emoji}</div>
+                    <div class="h-28 ${catGradients[r.cat] || catGradients.General} flex items-center justify-center text-4xl">${iconHtml}</div>
                     <div class="p-4">
                         <span class="cat-badge ${style} inline-block mb-2">${escapeHTML(r.cat)}</span>
                         <h3 class="font-bold text-gray-900 dark:text-white text-sm leading-snug group-hover:text-accent transition-colors" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHTML(r.title)}</h3>
